@@ -8,10 +8,10 @@ import (
 
 	"gopkg.in/mgo.v2"
 
-	"gitlab.cdk.corp.sopra/cdk/godocktor-api/common/logs"
-	"gitlab.cdk.corp.sopra/cdk/godocktor-api/daemons"
-	"gitlab.cdk.corp.sopra/cdk/godocktor-api/groups"
-	"gitlab.cdk.corp.sopra/cdk/godocktor-api/services"
+	"github.com/soprasteria/godocktor-api/common/logs"
+	"github.com/soprasteria/godocktor-api/daemons"
+	"github.com/soprasteria/godocktor-api/groups"
+	"github.com/soprasteria/godocktor-api/services"
 )
 
 func init() {

@@ -1,10 +1,10 @@
 package docktor
 
 import (
+	"github.com/soprasteria/godocktor-api/daemons"
+	"github.com/soprasteria/godocktor-api/groups"
+	"github.com/soprasteria/godocktor-api/services"
 	"github.com/stretchr/testify/mock"
-	"gitlab.cdk.corp.sopra/cdk/godocktor-api/daemons"
-	"gitlab.cdk.corp.sopra/cdk/godocktor-api/groups"
-	"gitlab.cdk.corp.sopra/cdk/godocktor-api/services"
 	"gopkg.in/mgo.v2"
 )
 
