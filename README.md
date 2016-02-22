@@ -1,5 +1,7 @@
 # Go API for Docktor model
 
+See Docktor : https://github.com/docktor/docktor
+
 ## Usage
 
 ```go
