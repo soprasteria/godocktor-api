@@ -3,7 +3,7 @@
 ## Usage
 
 ```go
-import "gitlab.cdk.corp.sopra/cdk/godocktor-api"
+import "github.com/soprasteria/godocktor-api"
 
 dock, err := docktor.Open("localhost"))
 if err != nil {
@@ -11,6 +11,6 @@ if err != nil {
 }
 defer dock.Close()
 
-fmt.Printf("Intools exist ? %v\n", dock.Services.IsExist("Intools"))
+fmt.Printf("Redis exist ? %v\n", dock.Services().IsExist("Redis"))
 
 ```
