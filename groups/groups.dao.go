@@ -1,0 +1,157 @@
+package groups
+
+import (
+	"gopkg.in/mgo.v2"
+	"gopkg.in/mgo.v2/bson"
+)
+
+// Repo is the repository for projects
+type Repo struct {
+	Coll *mgo.Collection
+}
+
+// FindByID get the group by its id
+func (r *Repo) FindByID(id string) (Group, error) {
+	result := Group{}
+	err := r.Coll.FindId(bson.ObjectIdHex(id)).One(&result)
+	if err != nil {
+		return result, err
+	}
+
+	return result, nil
+}
+
+// FindByIDBson get the group by its id (as a bson object)
+func (r *Repo) FindByIDBson(id bson.ObjectId) (Group, error) {
+	result := Group{}
+	err := r.Coll.FindId(id).One(&result)
+	if err != nil {
+		return result, err
+	}
+
+	return result, nil
+}
+
+// Find get the first group with a given name
+func (r *Repo) Find(name string) (Group, error) {
+	result := Group{}
+	err := r.Coll.Find(bson.M{"title": name}).One(&result)
+	if err != nil {
+		return result, err
+	}
+
+	return result, nil
+}
+
+// FindAll get all groups by the give name
+func (r *Repo) FindAll(name string) ([]Group, error) {
+	results := []Group{}
+	err := r.Coll.Find(bson.M{"title": name}).All(&results)
+	if err != nil {
+		return results, err
+	}
+
+	return results, nil
+}
+
+// FindAllByRegex get all groups by the regex name
+func (r *Repo) FindAllByRegex(nameRegex string) ([]Group, error) {
+	results := []Group{}
+	err := r.Coll.Find(bson.M{"title": &bson.RegEx{Pattern: nameRegex}}).All(&results)
+	if err != nil {
+		return results, err
+	}
+
+	return results, nil
+}
+
+// FindAllWithContainers get all groups that contains a list of containers
+func (r *Repo) FindAllWithContainers(groupNameRegex string, containersID []string) ([]Group, error) {
+	results := []Group{}
+	err := r.Coll.Find(
+		bson.M{
+			"title":                  &bson.RegEx{Pattern: groupNameRegex},
+			"containers.containerId": &bson.M{"$in": containersID},
+		}).All(&results)
+
+	if err != nil {
+		return results, err
+	}
+
+	return results, nil
+}
+
+// FilterByContainer get all groups matching a regex and a list of containers
+//	db.getCollection('groups').aggregate([
+//				{"$match" : {
+//						"title": {"$regex" : ".*"}
+//						}
+//				},
+//				{ "$unwind" : "$containers" },
+//				{ "$match" : {
+//						"containers.containerId": {"$in": ["ID"],
+//						"containers.serviceTitle": "Redis",
+//						"containers.image" : {"$regex" : "redis:2.*"}
+//				}}
+//				,
+//				{ "$project" : {
+//						"_id" : 1,
+//						"container" : "$containers",
+//						}
+//				}
+// ])
+func (r *Repo) FilterByContainer(groupNameRegex string, service string, containersID []string, imageRegex string) (containersWithGroup []ContainerWithGroup, err error) {
+	results := []ContainerWithGroupID{}
+
+	// Aggregation in 3 steps to get a list of containers id from groups
+	// Filter the groups
+	filterGroupByTitle := bson.M{"$match": bson.M{
+		"title": &bson.RegEx{Pattern: groupNameRegex},
+	}}
+	// Get containers from filtered groups
+	getContainers := bson.M{"$unwind": "$containers"}
+	// Filter by containers
+	filterContainers := bson.M{"$match": bson.M{
+		"containers.containerId":  &bson.M{"$in": containersID},
+		"containers.serviceTitle": service,
+		"containers.image":        &bson.RegEx{Pattern: imageRegex},
+	}}
+	// Get ids from containers
+	getIds := bson.M{"$project": bson.M{"_id": 1, "container": "$containers"}}
+
+	operations := []bson.M{filterGroupByTitle, getContainers, filterContainers, getIds}
+	err = r.Coll.Pipe(operations).All(&results)
+	if err != nil {
+		return
+	}
+
+	// Get group entity for each container
+	for _, v := range results {
+		group, err := r.FindByIDBson(v.ID)
+		if err != nil {
+			return []ContainerWithGroup{}, err
+		}
+		crg := ContainerWithGroup{
+			Group:     group,
+			Container: v.Container,
+		}
+		containersWithGroup = append(containersWithGroup, crg)
+	}
+	return
+}
+
+// UpdateContainer updates the container from the given group
+// update({
+//        _id: ObjectId("id"),
+//        "containers._id": ObjectId("id")
+//    },{
+//        $set: {"containers.$": {<container object>}}
+//    }
+// );
+func (r *Repo) UpdateContainer(group Group, container Container) error {
+	err := r.Coll.Update(
+		bson.M{"_id": group.ID, "containers._id": container.ID},
+		bson.M{"$set": bson.M{"containers.$": container}},
+	)
+	return err
+}
