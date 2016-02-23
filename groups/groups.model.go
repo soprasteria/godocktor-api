@@ -21,22 +21,22 @@ type ParameterContainer struct {
 	Value string        `bson:"value"`
 }
 
-// VariableContainer TODO
+// VariableContainer is a variable for the container
 type VariableContainer struct {
 	ID    bson.ObjectId `bson:"_id,omitempty"`
 	Name  string        `bson:"name"`
 	Value string        `bson:"value"`
 }
 
-// VolumeContainer TODO
+// VolumeContainer is a volume mapped to the container
 type VolumeContainer struct {
 	ID       bson.ObjectId `bson:"_id,omitempty"`
-	Internal int           `bson:"internal"`
-	External int           `bson:"external"`
+	Internal string        `bson:"internal"`
+	External string        `bson:"external"`
 	Rights   string        `bson:"rights"`
 }
 
-// JobContainer TODO
+// JobContainer is a job lunched for the container
 type JobContainer struct {
 	ID            bson.ObjectId `bson:"_id,omitempty"`
 	Name          string        `bson:"name"`
@@ -47,7 +47,7 @@ type JobContainer struct {
 	LastExecution string        `bson:"lastExecution"`
 }
 
-// Container TODO
+// Container is a container associated to the group
 type Container struct {
 	ID           bson.ObjectId        `bson:"_id,omitempty"`
 	Name         string               `bson:"name"`
