@@ -24,6 +24,12 @@ func (m *MockDocktorServices) Find(title string) (Service, error) {
 	return args.Get(0).(Service), args.Error(1)
 }
 
+// FindAllByRegex the service by regular expression
+func (m *MockDocktorServices) FindAllByRegex(title string) ([]Service, error) {
+	args := m.Mock.Called(title)
+	return args.Get(0).([]Service), args.Error(1)
+}
+
 // IsExist checks that the service exists with given title
 func (m *MockDocktorServices) IsExist(title string) bool {
 	args := m.Mock.Called(title)

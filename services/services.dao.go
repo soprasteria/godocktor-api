@@ -1,6 +1,7 @@
 package services
 
 import (
+	"fmt"
 	"time"
 
 	"gopkg.in/mgo.v2"
@@ -44,6 +45,18 @@ func (r *Repo) Find(title string) (Service, error) {
 	}
 
 	return result, nil
+}
+
+// FindAllByRegex get all services by the regex name
+func (r *Repo) FindAllByRegex(nameRegex string) ([]Service, error) {
+	results := []Service{}
+	err := r.Coll.Find(bson.M{"title": &bson.RegEx{Pattern: nameRegex, Options: "i"}}).All(&results)
+	fmt.Println(nameRegex)
+	if err != nil {
+		return results, err
+	}
+
+	return results, nil
 }
 
 // IsExist checks that the service exists with given title
