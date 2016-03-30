@@ -1,6 +1,9 @@
 package groups
 
-import "github.com/stretchr/testify/mock"
+import (
+	"github.com/stretchr/testify/mock"
+	"gopkg.in/mgo.v2/bson"
+)
 
 // MockDocktorGroups mocks Docktor services API
 type MockDocktorGroups struct {
@@ -12,8 +15,26 @@ func NewMockDocktorGroups() *MockDocktorGroups {
 	return &MockDocktorGroups{}
 }
 
+// Save group into database
+func (r *MockDocktorGroups) Save(group Group) (Group, error) {
+	args := r.Mock.Called(group)
+	return args.Get(0).(Group), args.Error(1)
+}
+
+// Delete a group in database
+func (r *MockDocktorGroups) Delete(id bson.ObjectId) (bson.ObjectId, error) {
+	args := r.Mock.Called(id)
+	return args.Get(0).(bson.ObjectId), args.Error(1)
+}
+
 // FindByID get the group by its id
 func (r *MockDocktorGroups) FindByID(id string) (Group, error) {
+	args := r.Mock.Called(id)
+	return args.Get(0).(Group), args.Error(1)
+}
+
+// FindByIDBson get the group by its id
+func (r *MockDocktorGroups) FindByIDBson(id bson.ObjectId) (Group, error) {
 	args := r.Mock.Called(id)
 	return args.Get(0).(Group), args.Error(1)
 }
@@ -24,8 +45,14 @@ func (r *MockDocktorGroups) Find(name string) (Group, error) {
 	return args.Get(0).(Group), args.Error(1)
 }
 
-// FindAll get all groups by the give name
-func (r *MockDocktorGroups) FindAll(name string) ([]Group, error) {
+// FindAll get all
+func (r *MockDocktorGroups) FindAll() ([]Group, error) {
+	args := r.Mock.Called()
+	return args.Get(0).([]Group), args.Error(1)
+}
+
+// FindAllByName get all groups by the give name
+func (r *MockDocktorGroups) FindAllByName(name string) ([]Group, error) {
 	args := r.Mock.Called(name)
 	return args.Get(0).([]Group), args.Error(1)
 }

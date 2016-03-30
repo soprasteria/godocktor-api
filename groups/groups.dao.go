@@ -10,6 +10,40 @@ type Repo struct {
 	Coll *mgo.Collection
 }
 
+// Save a group into a database
+func (r *Repo) Save(group Group) (Group, error) {
+	if group.ID.Hex() == "" {
+		group.ID = bson.NewObjectId()
+	}
+
+	nb, err := r.Coll.FindId(group.ID).Count()
+	if err != nil {
+		return group, err
+	}
+
+	if nb != 0 {
+		err := r.Coll.UpdateId(group.ID, group)
+		if err != nil {
+			return group, err
+		}
+	} else {
+		err := r.Coll.Insert(group)
+		if err != nil {
+			return group, err
+		}
+	}
+	return group, nil
+}
+
+// Delete a group in database
+func (r *Repo) Delete(id bson.ObjectId) (bson.ObjectId, error) {
+	err := r.Coll.RemoveId(id)
+	if err != nil {
+		return id, err
+	}
+	return id, nil
+}
+
 // FindByID get the group by its id
 func (r *Repo) FindByID(id string) (Group, error) {
 	result := Group{}
@@ -43,8 +77,19 @@ func (r *Repo) Find(name string) (Group, error) {
 	return result, nil
 }
 
-// FindAll get all groups by the give name
-func (r *Repo) FindAll(name string) ([]Group, error) {
+// FindAll get all groups
+func (r *Repo) FindAll() ([]Group, error) {
+	results := []Group{}
+	err := r.Coll.Find(bson.M{}).All(&results)
+	if err != nil {
+		return results, err
+	}
+
+	return results, nil
+}
+
+// FindAllByName get all groups by the give name
+func (r *Repo) FindAllByName(name string) ([]Group, error) {
 	results := []Group{}
 	err := r.Coll.Find(bson.M{"title": name}).All(&results)
 	if err != nil {

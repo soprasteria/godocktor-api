@@ -1,6 +1,9 @@
 package services
 
-import "github.com/stretchr/testify/mock"
+import (
+	"github.com/stretchr/testify/mock"
+	"gopkg.in/mgo.v2/bson"
+)
 
 // MockDocktorServices mocks Docktor services API
 type MockDocktorServices struct {
@@ -10,6 +13,18 @@ type MockDocktorServices struct {
 // NewMockDocktorServices gets the mock
 func NewMockDocktorServices() *MockDocktorServices {
 	return &MockDocktorServices{}
+}
+
+// Save group into database
+func (m *MockDocktorServices) Save(service Service) (Service, error) {
+	args := m.Mock.Called(service)
+	return args.Get(0).(Service), args.Error(1)
+}
+
+// Delete a group in database
+func (m *MockDocktorServices) Delete(id bson.ObjectId) (bson.ObjectId, error) {
+	args := m.Mock.Called(id)
+	return args.Get(0).(bson.ObjectId), args.Error(1)
 }
 
 // FindByID the service
@@ -22,6 +37,12 @@ func (m *MockDocktorServices) FindByID(id string) (Service, error) {
 func (m *MockDocktorServices) Find(title string) (Service, error) {
 	args := m.Mock.Called(title)
 	return args.Get(0).(Service), args.Error(1)
+}
+
+// FindAll services
+func (m *MockDocktorServices) FindAll() ([]Service, error) {
+	args := m.Mock.Called()
+	return args.Get(0).([]Service), args.Error(1)
 }
 
 // FindAllByRegex the service by regular expression
