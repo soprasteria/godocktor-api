@@ -44,3 +44,9 @@ func (r *MockDocktorUsers) FindAll() ([]User, error) {
 	args := r.Mock.Called()
 	return args.Get(0).([]User), args.Error(1)
 }
+
+// FindAllByGroupID get all users by a group ID
+func (r *MockDocktorUsers) FindAllByGroupID(id bson.ObjectId) ([]User, error) {
+	args := r.Mock.Called(id)
+	return args.Get(0).([]User), args.Error(1)
+}

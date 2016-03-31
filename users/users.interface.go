@@ -12,6 +12,8 @@ type RepoUsers interface {
 	FindByID(id string) (User, error)
 	// FindByIDBson get the user by its id
 	FindByIDBson(id bson.ObjectId) (User, error)
-	// FindAll get all groups
+	// FindAll get all users
 	FindAll() ([]User, error)
+	// FindAllByGroupID get all users by a group ID
+	FindAllByGroupID(id bson.ObjectId) ([]User, error)
 }

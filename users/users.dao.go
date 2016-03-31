@@ -76,3 +76,14 @@ func (r *Repo) FindAll() ([]User, error) {
 
 	return results, nil
 }
+
+// FindAllByGroupID get all users by group
+func (r *Repo) FindAllByGroupID(id bson.ObjectId) ([]User, error) {
+	results := []User{}
+	err := r.Coll.Find(bson.M{"groups": bson.M{"$in": []bson.ObjectId{id}}}).All(&results)
+	if err != nil {
+		return results, err
+	}
+
+	return results, nil
+}
