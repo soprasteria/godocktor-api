@@ -4,6 +4,7 @@ import (
 	"github.com/soprasteria/godocktor-api/daemons"
 	"github.com/soprasteria/godocktor-api/groups"
 	"github.com/soprasteria/godocktor-api/services"
+	"github.com/soprasteria/godocktor-api/users"
 	"gopkg.in/mgo.v2"
 )
 
@@ -14,6 +15,7 @@ type Docktor struct {
 	session  Session
 	groups   groups.RepoGroups
 	daemons  daemons.RepoDaemons
+	users    users.RepoUsers
 }
 
 type appContext struct {
