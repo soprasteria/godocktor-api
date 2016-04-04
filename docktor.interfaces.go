@@ -5,6 +5,7 @@ import (
 	"github.com/soprasteria/godocktor-api/groups"
 	"github.com/soprasteria/godocktor-api/services"
 	"gopkg.in/mgo.v2"
+	"github.com/soprasteria/godocktor-api/users"
 )
 
 // Session is the interface for a docktor sessio
@@ -18,5 +19,6 @@ type Client interface {
 	Services() services.RepoServices
 	Groups() groups.RepoGroups
 	Daemons() daemons.RepoDaemons
+	Users() users.RepoUsers
 	Close()
 }
