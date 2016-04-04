@@ -4,6 +4,7 @@ import (
 	"github.com/soprasteria/godocktor-api/daemons"
 	"github.com/soprasteria/godocktor-api/groups"
 	"github.com/soprasteria/godocktor-api/services"
+	"github.com/soprasteria/godocktor-api/sites"
 	"github.com/soprasteria/godocktor-api/users"
 	"github.com/stretchr/testify/mock"
 	"gopkg.in/mgo.v2"
@@ -21,6 +22,7 @@ type MockDocktor struct {
 	groups   *groups.MockDocktorGroups
 	daemons  *daemons.MockDocktorDaemons
 	users    *users.MockDocktorUsers
+	sites    *sites.MockDocktorSites
 	mock.Mock
 }
 
@@ -35,12 +37,14 @@ func NewMockDocktor() *MockDocktor {
 	var mGroups = groups.NewMockDocktorGroups()
 	var mDaemons = daemons.NewMockDocktorDaemons()
 	var mUsers = users.NewMockDocktorUsers()
+	var mSites = sites.NewMockDocktorSites()
 	var mSession = NewMockSession()
 	return &MockDocktor{
 		services: mServices,
 		groups:   mGroups,
 		daemons:  mDaemons,
 		users:    mUsers,
+		sites:    mSites,
 		session:  mSession,
 	}
 }
@@ -84,6 +88,12 @@ func (d *MockDocktor) Users() users.RepoUsers {
 	return args.Get(0).(users.RepoUsers)
 }
 
+// Sites mocks the sites
+func (d *MockDocktor) Sites() sites.RepoSites {
+	args := d.Mock.Called()
+	return args.Get(0).(sites.RepoSites)
+}
+
 // MockServices return a mocked service
 func (d *MockDocktor) MockServices() *services.MockDocktorServices {
 	return d.services
@@ -102,4 +112,9 @@ func (d *MockDocktor) MockDaemons() *daemons.MockDocktorDaemons {
 // MockUsers return a mocked users
 func (d *MockDocktor) MockUsers() *users.MockDocktorUsers {
 	return d.users
+}
+
+// MockSites return a mocked sites
+func (d *MockDocktor) MockSites() *sites.MockDocktorSites {
+	return d.sites
 }
