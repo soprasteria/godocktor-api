@@ -20,7 +20,7 @@ type User struct {
 	Role        string          `bson:"role"`
 	Created     time.Time       `bson:"created"`
 	Updated     time.Time       `bson:"updated"`
-	AllowGrant  bool            `bson:allowGrant`
+	AllowGrant  bool            `bson:"allowGrant"`
 	Groups      []bson.ObjectId `bson:"groups"`
 	Favorites   []bson.ObjectId `bson:"favorites"`
 }

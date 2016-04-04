@@ -5,7 +5,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-// MockDocktorUsers mocks Docktor services API
+// MockDocktorUsers mocks Docktor users API
 type MockDocktorUsers struct {
 	mock.Mock
 }

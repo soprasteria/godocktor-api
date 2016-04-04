@@ -12,6 +12,7 @@ import (
 	"github.com/soprasteria/godocktor-api/daemons"
 	"github.com/soprasteria/godocktor-api/groups"
 	"github.com/soprasteria/godocktor-api/services"
+	"github.com/soprasteria/godocktor-api/sites"
 	"github.com/soprasteria/godocktor-api/users"
 )
 
@@ -41,12 +42,14 @@ func Open(docktorMongoHost string) (*Docktor, error) {
 	groups := &groups.Repo{Coll: context.db.C("groups")}
 	daemons := &daemons.Repo{Coll: context.db.C("daemons")}
 	users := &users.Repo{Coll: context.db.C("users")}
+	sites := &sites.Repo{Coll: context.db.C("sites")}
 
 	return &Docktor{
 		services: services,
 		groups:   groups,
 		daemons:  daemons,
 		users:    users,
+		sites:    sites,
 		session:  session,
 	}, nil
 }
@@ -74,4 +77,9 @@ func (dock *Docktor) Daemons() daemons.RepoDaemons {
 // Users is the entrypoint for Users API
 func (dock *Docktor) Users() users.RepoUsers {
 	return dock.users
+}
+
+// Sites is the entrypoint for Sites API
+func (dock *Docktor) Sites() sites.RepoSites {
+	return dock.sites
 }
