@@ -15,4 +15,3 @@ type RepoSites interface {
 	// FindAll get all sites
 	FindAll() ([]Site, error)
 }
-
