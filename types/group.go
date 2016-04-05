@@ -14,6 +14,9 @@ type FileSystem struct {
 	Description string        `bson:"description"`
 }
 
+//FileSystems is a slice of FileSystem
+type FileSystems []FileSystem
+
 // ParameterContainer is an env variables given to the creation of the container
 type ParameterContainer struct {
 	ID    bson.ObjectId `bson:"_id,omitempty"`
@@ -65,6 +68,34 @@ type Container struct {
 	Active       bool                 `bson:"active"`
 }
 
+// Containers is a slice of Container
+type Containers []Container
+
+// AddParameter adds a ParameterContainer to the Container
+func (c *Container) AddParameter(p ParameterContainer) {
+	c.Parameters = append(c.Parameters, p)
+}
+
+// AddPort adds a PortContainer to the Container
+func (c *Container) AddPort(p PortContainer) {
+	c.Ports = append(c.Ports, p)
+}
+
+// AddVariable adds a VariableContainer to the Container
+func (c *Container) AddVariable(v VariableContainer) {
+	c.Variables = append(c.Variables, v)
+}
+
+// AddVolume adds a VolumeContainer to the Container
+func (c *Container) AddVolume(v VolumeContainer) {
+	c.Volumes = append(c.Volumes, v)
+}
+
+// AddJob adds a JobContainer to the Container
+func (c *Container) AddJob(j JobContainer) {
+	c.Jobs = append(c.Jobs, j)
+}
+
 // Group is a entity (like a project) that gather services instances as containers
 type Group struct {
 	ID           bson.ObjectId `bson:"_id,omitempty"`
@@ -74,9 +105,19 @@ type Group struct {
 	PortMinRange int           `bson:"portminrange"`
 	PortMaxRange int           `bson:"portmaxrange"`
 	Daemon       bson.ObjectId `bson:"daemon"`
-	FileSystems  []FileSystem  `bson:"filesystems"`
-	Containers   []Container   `bson:"containers"`
+	FileSystems  FileSystems   `bson:"filesystems"`
+	Containers   Containers    `bson:"containers"`
 	User         bson.ObjectId `bson:"variables"`
+}
+
+// AddFileSystem adds a FileSystem to the Group
+func (g *Group) AddFileSystem(f FileSystem) {
+	g.FileSystems = append(g.FileSystems, f)
+}
+
+// AddContainer adds a Container to the Group
+func (g *Group) AddContainer(c Container) {
+	g.Containers = append(g.Containers, c)
 }
 
 // ContainerWithGroup is a entity which contains a container, linked to a group

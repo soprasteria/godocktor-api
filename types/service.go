@@ -14,10 +14,25 @@ type Service struct {
 	Created  time.Time     `bson:"created"`
 	Title    string        `bson:"title"`
 	Images   Images        `bson:"images"`
-	Commands []Command     `bson:"commands"`
-	URLs     []URL         `bson:"urls"`
-	Jobs     []Job         `bson:"jobs"`
+	Commands Commands      `bson:"commands"`
+	URLs     URLs          `bson:"urls"`
+	Jobs     Jobs          `bson:"jobs"`
 	User     bson.ObjectId `bson:"user"`
+}
+
+// AddCommand adds a Command to the Service
+func (s *Service) AddCommand(c Command) {
+	s.Commands = append(s.Commands, c)
+}
+
+// AddURL adds an URL to the Service
+func (s *Service) AddURL(u URL) {
+	s.URLs = append(s.URLs, u)
+}
+
+// AddJob adds a Job to the Service
+func (s *Service) AddJob(j Job) {
+	s.Jobs = append(s.Jobs, j)
 }
 
 // GetLatestImage gets the last created image for given service
