@@ -14,3 +14,6 @@ type Command struct {
 	Role    string        `bson:"role"` // user, admin
 	Created time.Time     `bson:"created"`
 }
+
+// Commands is a slice of Command
+type Commands []Command

@@ -17,3 +17,6 @@ type Job struct {
 	Active      bool          `bson:"active"`
 	Created     time.Time     `bson:"created"`
 }
+
+// Jobs is a slice of Job
+type Jobs []Job
