@@ -1,33 +1,14 @@
 package docktor
 
 import (
-	"io"
-	"io/ioutil"
-	"log"
-	"os"
-
 	"gopkg.in/mgo.v2"
 
-	"github.com/soprasteria/godocktor-api/common/logs"
 	"github.com/soprasteria/godocktor-api/daemons"
 	"github.com/soprasteria/godocktor-api/groups"
 	"github.com/soprasteria/godocktor-api/services"
 	"github.com/soprasteria/godocktor-api/sites"
 	"github.com/soprasteria/godocktor-api/users"
 )
-
-func init() {
-	initLoggers()
-}
-
-func initLoggers() {
-	var debugLogger io.Writer
-	var flag int
-	debugLogger = ioutil.Discard
-	flag = log.Ldate | log.Ltime
-
-	logs.InitLog(debugLogger, os.Stdout, os.Stdout, os.Stderr, flag)
-}
 
 // Open the connexion to docktor API
 func Open(docktorMongoHost string) (*Docktor, error) {
