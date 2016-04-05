@@ -4,30 +4,31 @@ import (
 	"testing"
 	"time"
 
+	"github.com/soprasteria/godocktor-api/types"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestGetLastImage(t *testing.T) {
 	// Given
-	images := []Image{
-		Image{
+	images := []types.Image{
+		types.Image{
 			Created: time.Date(2005, time.November, 10, 22, 0, 0, 0, time.UTC),
 			Name:    "Image2005",
 		},
-		Image{
+		types.Image{
 			Created: time.Date(2016, time.November, 10, 23, 0, 0, 0, time.UTC),
 			Name:    "Image2016",
 		},
-		Image{
+		types.Image{
 			Created: time.Date(2015, time.November, 10, 23, 0, 0, 0, time.UTC),
 			Name:    "Image2015",
 		},
-		Image{
+		types.Image{
 			Created: time.Date(2010, time.November, 10, 23, 0, 0, 0, time.UTC),
 			Name:    "Image2010",
 		},
 	}
-	service := Service{
+	service := types.Service{
 		Images: images,
 	}
 

@@ -1,6 +1,7 @@
 package daemons
 
 import (
+	"github.com/soprasteria/godocktor-api/types"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
@@ -11,7 +12,7 @@ type Repo struct {
 }
 
 // Save a daemon into database
-func (r *Repo) Save(daemon Daemon) (Daemon, error) {
+func (r *Repo) Save(daemon types.Daemon) (types.Daemon, error) {
 	if daemon.ID.Hex() == "" {
 		daemon.ID = bson.NewObjectId()
 	}
@@ -45,8 +46,8 @@ func (r *Repo) Delete(id bson.ObjectId) (bson.ObjectId, error) {
 }
 
 // FindByID get the daemon by its id
-func (r *Repo) FindByID(id string) (Daemon, error) {
-	result := Daemon{}
+func (r *Repo) FindByID(id string) (types.Daemon, error) {
+	result := types.Daemon{}
 	err := r.Coll.FindId(bson.ObjectIdHex(id)).One(&result)
 	if err != nil {
 		return result, err
@@ -56,8 +57,8 @@ func (r *Repo) FindByID(id string) (Daemon, error) {
 }
 
 // FindByIDBson get the daemon by its id (as a bson object)
-func (r *Repo) FindByIDBson(id bson.ObjectId) (Daemon, error) {
-	result := Daemon{}
+func (r *Repo) FindByIDBson(id bson.ObjectId) (types.Daemon, error) {
+	result := types.Daemon{}
 	err := r.Coll.FindId(id).One(&result)
 	if err != nil {
 		return result, err
@@ -67,8 +68,8 @@ func (r *Repo) FindByIDBson(id bson.ObjectId) (Daemon, error) {
 }
 
 // Find get the first daemon with a given name (representing the host)
-func (r *Repo) Find(name string) (Daemon, error) {
-	result := Daemon{}
+func (r *Repo) Find(name string) (types.Daemon, error) {
+	result := types.Daemon{}
 	err := r.Coll.Find(bson.M{"host": name}).One(&result)
 	if err != nil {
 		return result, err
@@ -78,8 +79,8 @@ func (r *Repo) Find(name string) (Daemon, error) {
 }
 
 // FindAll get all daemons
-func (r *Repo) FindAll() ([]Daemon, error) {
-	results := []Daemon{}
+func (r *Repo) FindAll() ([]types.Daemon, error) {
+	results := []types.Daemon{}
 	err := r.Coll.Find(bson.M{}).All(&results)
 	if err != nil {
 		return results, err

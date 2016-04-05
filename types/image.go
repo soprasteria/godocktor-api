@@ -1,9 +1,6 @@
-package services
+package types
 
 import (
-	"errors"
-	"fmt"
-	"strings"
 	"time"
 
 	"gopkg.in/mgo.v2/bson"
@@ -55,45 +52,4 @@ func (a Images) EqualsInConf(b Images) bool {
 	}
 
 	return true
-}
-
-// GetLatestImage gets the last created image for given service
-func (s Service) GetLatestImage() (Image, error) {
-	var last time.Time
-	var image Image
-
-	for _, v := range s.Images {
-		created := v.Created
-		if v.Created.After(last) {
-			last = created
-			image = v
-		}
-	}
-
-	if image.Name == "" {
-		return image, errors.New("Did not find any image")
-	}
-
-	return image, nil
-}
-
-// GetImage returns the image return from the service
-func (s Service) GetImage(image string) (Image, error) {
-	for _, v := range s.Images {
-		if strings.TrimSpace(image) == strings.TrimSpace(v.Name) {
-			return v, nil
-		}
-	}
-	return Image{}, fmt.Errorf("Did not find image %v in service %v", image, s.Title)
-}
-
-// IsExistingImage checks that image exists in service
-func (s Service) IsExistingImage(image string) bool {
-	for _, v := range s.Images {
-		if strings.TrimSpace(image) == strings.TrimSpace(v.Name) {
-			return true
-		}
-	}
-
-	return false
 }
