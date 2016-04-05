@@ -3,6 +3,7 @@ package users
 import (
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
+	"github.com/soprasteria/godocktor-api/types"
 )
 
 // Repo is the repository for projects
@@ -11,7 +12,7 @@ type Repo struct {
 }
 
 // Save a user into a database
-func (r *Repo) Save(user User) (User, error) {
+func (r *Repo) Save(user types.User) (types.User, error) {
 	if user.ID.Hex() == "" {
 		user.ID = bson.NewObjectId()
 	}
@@ -45,8 +46,8 @@ func (r *Repo) Delete(id bson.ObjectId) (bson.ObjectId, error) {
 }
 
 // FindByID get the user by its id
-func (r *Repo) FindByID(id string) (User, error) {
-	result := User{}
+func (r *Repo) FindByID(id string) (types.User, error) {
+	result := types.User{}
 	err := r.Coll.FindId(bson.ObjectIdHex(id)).One(&result)
 	if err != nil {
 		return result, err
@@ -56,8 +57,8 @@ func (r *Repo) FindByID(id string) (User, error) {
 }
 
 // FindByIDBson get the user by its id (as a bson object)
-func (r *Repo) FindByIDBson(id bson.ObjectId) (User, error) {
-	result := User{}
+func (r *Repo) FindByIDBson(id bson.ObjectId) (types.User, error) {
+	result := types.User{}
 	err := r.Coll.FindId(id).One(&result)
 	if err != nil {
 		return result, err
@@ -67,8 +68,8 @@ func (r *Repo) FindByIDBson(id bson.ObjectId) (User, error) {
 }
 
 // FindAll get all users
-func (r *Repo) FindAll() ([]User, error) {
-	results := []User{}
+func (r *Repo) FindAll() ([]types.User, error) {
+	results := []types.User{}
 	err := r.Coll.Find(bson.M{}).All(&results)
 	if err != nil {
 		return results, err
@@ -78,8 +79,8 @@ func (r *Repo) FindAll() ([]User, error) {
 }
 
 // FindAllByGroupID get all users by group
-func (r *Repo) FindAllByGroupID(id bson.ObjectId) ([]User, error) {
-	results := []User{}
+func (r *Repo) FindAllByGroupID(id bson.ObjectId) ([]types.User, error) {
+	results := []types.User{}
 	err := r.Coll.Find(bson.M{"groups": bson.M{"$in": []bson.ObjectId{id}}}).All(&results)
 	if err != nil {
 		return results, err
