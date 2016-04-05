@@ -1,4 +1,4 @@
-package services
+package types
 
 import (
 	"time"
@@ -13,3 +13,6 @@ type URL struct {
 	URL     string        `bson:"url"`
 	Created time.Time     `bson:"created"`
 }
+
+// URLs is a slice of URL
+type URLs []URL

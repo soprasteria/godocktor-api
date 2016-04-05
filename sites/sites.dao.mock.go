@@ -1,6 +1,7 @@
 package sites
 
 import (
+	"github.com/soprasteria/godocktor-api/types"
 	"github.com/stretchr/testify/mock"
 	"gopkg.in/mgo.v2/bson"
 )
@@ -16,9 +17,9 @@ func NewMockDocktorSites() *MockDocktorSites {
 }
 
 // Save site into database
-func (r *MockDocktorSites) Save(site Site) (Site, error) {
+func (r *MockDocktorSites) Save(site types.Site) (types.Site, error) {
 	args := r.Mock.Called(site)
-	return args.Get(0).(Site), args.Error(1)
+	return args.Get(0).(types.Site), args.Error(1)
 }
 
 // Delete a site in database
@@ -28,19 +29,19 @@ func (r *MockDocktorSites) Delete(id bson.ObjectId) (bson.ObjectId, error) {
 }
 
 // FindByID get the site by its id
-func (r *MockDocktorSites) FindByID(id string) (Site, error) {
+func (r *MockDocktorSites) FindByID(id string) (types.Site, error) {
 	args := r.Mock.Called(id)
-	return args.Get(0).(Site), args.Error(1)
+	return args.Get(0).(types.Site), args.Error(1)
 }
 
 // FindByIDBson get the site by its id
-func (r *MockDocktorSites) FindByIDBson(id bson.ObjectId) (Site, error) {
+func (r *MockDocktorSites) FindByIDBson(id bson.ObjectId) (types.Site, error) {
 	args := r.Mock.Called(id)
-	return args.Get(0).(Site), args.Error(1)
+	return args.Get(0).(types.Site), args.Error(1)
 }
 
 // FindAll get all
-func (r *MockDocktorSites) FindAll() ([]Site, error) {
+func (r *MockDocktorSites) FindAll() ([]types.Site, error) {
 	args := r.Mock.Called()
-	return args.Get(0).([]Site), args.Error(1)
+	return args.Get(0).([]types.Site), args.Error(1)
 }

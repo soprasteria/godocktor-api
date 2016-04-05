@@ -1,19 +1,22 @@
 package users
 
-import "gopkg.in/mgo.v2/bson"
+import (
+	"gopkg.in/mgo.v2/bson"
+	"github.com/soprasteria/godocktor-api/types"
+)
 
 // RepoUsers is the repo for users
 type RepoUsers interface {
 	// Save a user into database
-	Save(user User) (User, error)
+	Save(user types.User) (types.User, error)
 	// Delete a user in database
 	Delete(id bson.ObjectId) (bson.ObjectId, error)
 	// FindByID get the user by its id
-	FindByID(id string) (User, error)
+	FindByID(id string) (types.User, error)
 	// FindByIDBson get the user by its id
-	FindByIDBson(id bson.ObjectId) (User, error)
+	FindByIDBson(id bson.ObjectId) (types.User, error)
 	// FindAll get all users
-	FindAll() ([]User, error)
+	FindAll() ([]types.User, error)
 	// FindAllByGroupID get all users by a group ID
-	FindAllByGroupID(id bson.ObjectId) ([]User, error)
+	FindAllByGroupID(id bson.ObjectId) ([]types.User, error)
 }
