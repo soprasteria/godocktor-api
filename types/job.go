@@ -1,4 +1,4 @@
-package services
+package types
 
 import (
 	"time"
@@ -17,15 +17,3 @@ type Job struct {
 	Active      bool          `bson:"active"`
 	Created     time.Time     `bson:"created"`
 }
-
-// GetActiveJobs get active jobs from service.
-func (s Service) GetActiveJobs() (jobs []Job) {
-	for _, j := range s.Jobs {
-		if j.Active {
-			jobs = append(jobs, j)
-		}
-	}
-	return
-}
-
-//func (j Job)

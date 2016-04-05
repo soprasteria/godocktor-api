@@ -1,6 +1,7 @@
 package sites
 
 import (
+	"github.com/soprasteria/godocktor-api/types"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
@@ -11,7 +12,7 @@ type Repo struct {
 }
 
 // Save a site into a database
-func (r *Repo) Save(site Site) (Site, error) {
+func (r *Repo) Save(site types.Site) (types.Site, error) {
 	if site.ID.Hex() == "" {
 		site.ID = bson.NewObjectId()
 	}
@@ -45,8 +46,8 @@ func (r *Repo) Delete(id bson.ObjectId) (bson.ObjectId, error) {
 }
 
 // FindByID get the site by its id
-func (r *Repo) FindByID(id string) (Site, error) {
-	result := Site{}
+func (r *Repo) FindByID(id string) (types.Site, error) {
+	result := types.Site{}
 	err := r.Coll.FindId(bson.ObjectIdHex(id)).One(&result)
 	if err != nil {
 		return result, err
@@ -56,8 +57,8 @@ func (r *Repo) FindByID(id string) (Site, error) {
 }
 
 // FindByIDBson get the site by its id (as a bson object)
-func (r *Repo) FindByIDBson(id bson.ObjectId) (Site, error) {
-	result := Site{}
+func (r *Repo) FindByIDBson(id bson.ObjectId) (types.Site, error) {
+	result := types.Site{}
 	err := r.Coll.FindId(id).One(&result)
 	if err != nil {
 		return result, err
@@ -67,8 +68,8 @@ func (r *Repo) FindByIDBson(id bson.ObjectId) (Site, error) {
 }
 
 // FindAll get all sites
-func (r *Repo) FindAll() ([]Site, error) {
-	results := []Site{}
+func (r *Repo) FindAll() ([]types.Site, error) {
+	results := []types.Site{}
 	err := r.Coll.Find(bson.M{}).All(&results)
 	if err != nil {
 		return results, err

@@ -2,23 +2,10 @@ package services
 
 import (
 	"fmt"
-	"time"
-
+	"github.com/soprasteria/godocktor-api/types"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
-
-// Service defines a CDK service
-type Service struct {
-	ID       bson.ObjectId `bson:"_id,omitempty"`
-	Created  time.Time     `bson:"created"`
-	Title    string        `bson:"title"`
-	Images   Images        `bson:"images"`
-	Commands []Command     `bson:"commands"`
-	URLs     []URL         `bson:"urls"`
-	Jobs     []Job         `bson:"jobs"`
-	User     bson.ObjectId `bson:"user"`
-}
 
 // Repo is the repository for services
 type Repo struct {
@@ -26,7 +13,7 @@ type Repo struct {
 }
 
 // Save a group into a database
-func (r *Repo) Save(service Service) (Service, error) {
+func (r *Repo) Save(service types.Service) (types.Service, error) {
 	if service.ID.Hex() == "" {
 		service.ID = bson.NewObjectId()
 	}
@@ -60,8 +47,8 @@ func (r *Repo) Delete(id bson.ObjectId) (bson.ObjectId, error) {
 }
 
 // FindByID the service
-func (r *Repo) FindByID(id string) (Service, error) {
-	result := Service{}
+func (r *Repo) FindByID(id string) (types.Service, error) {
+	result := types.Service{}
 	err := r.Coll.FindId(bson.ObjectIdHex(id)).One(&result)
 	if err != nil {
 		return result, err
@@ -71,8 +58,8 @@ func (r *Repo) FindByID(id string) (Service, error) {
 }
 
 // Find the service by its title, case-insensitive
-func (r *Repo) Find(title string) (Service, error) {
-	result := Service{}
+func (r *Repo) Find(title string) (types.Service, error) {
+	result := types.Service{}
 	err := r.Coll.Find(bson.M{"title": &bson.RegEx{Pattern: "^" + title + "$", Options: "i"}}).One(&result)
 	if err != nil {
 		return result, err
@@ -82,8 +69,8 @@ func (r *Repo) Find(title string) (Service, error) {
 }
 
 // FindAll get all services by the regex name
-func (r *Repo) FindAll() ([]Service, error) {
-	results := []Service{}
+func (r *Repo) FindAll() ([]types.Service, error) {
+	results := []types.Service{}
 	err := r.Coll.Find(bson.M{}).All(&results)
 	if err != nil {
 		return results, err
@@ -92,8 +79,8 @@ func (r *Repo) FindAll() ([]Service, error) {
 }
 
 // FindAllByRegex get all services by the regex name
-func (r *Repo) FindAllByRegex(nameRegex string) ([]Service, error) {
-	results := []Service{}
+func (r *Repo) FindAllByRegex(nameRegex string) ([]types.Service, error) {
+	results := []types.Service{}
 	err := r.Coll.Find(bson.M{"title": &bson.RegEx{Pattern: nameRegex, Options: "i"}}).All(&results)
 	fmt.Println(nameRegex)
 	if err != nil {
