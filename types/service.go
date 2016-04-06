@@ -20,19 +20,24 @@ type Service struct {
 	User     bson.ObjectId `bson:"user"`
 }
 
+// AddImage adds an Image to the Service
+func (s *Service) AddImage(i *Image) {
+	s.Images = append(s.Images, *i)
+}
+
 // AddCommand adds a Command to the Service
-func (s *Service) AddCommand(c Command) {
-	s.Commands = append(s.Commands, c)
+func (s *Service) AddCommand(c *Command) {
+	s.Commands = append(s.Commands, *c)
 }
 
 // AddURL adds an URL to the Service
-func (s *Service) AddURL(u URL) {
-	s.URLs = append(s.URLs, u)
+func (s *Service) AddURL(u *URL) {
+	s.URLs = append(s.URLs, *u)
 }
 
 // AddJob adds a Job to the Service
-func (s *Service) AddJob(j Job) {
-	s.Jobs = append(s.Jobs, j)
+func (s *Service) AddJob(j *Job) {
+	s.Jobs = append(s.Jobs, *j)
 }
 
 // GetLatestImage gets the last created image for given service
