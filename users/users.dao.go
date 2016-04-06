@@ -67,6 +67,17 @@ func (r *Repo) FindByIDBson(id bson.ObjectId) (types.User, error) {
 	return result, nil
 }
 
+// Find get the first user with a given username
+func (r *Repo) Find(username string) (types.User, error) {
+	result := types.User{}
+	err := r.Coll.Find(bson.M{"username": username}).One(&result)
+	if err != nil {
+		return result, err
+	}
+
+	return result, nil
+}
+
 // FindAll get all users
 func (r *Repo) FindAll() ([]types.User, error) {
 	results := []types.User{}
@@ -87,4 +98,8 @@ func (r *Repo) FindAllByGroupID(id bson.ObjectId) ([]types.User, error) {
 	}
 
 	return results, nil
+}
+
+func (r *Repo) Drop() error {
+	return r.Coll.DropCollection()
 }

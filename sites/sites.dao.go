@@ -67,6 +67,17 @@ func (r *Repo) FindByIDBson(id bson.ObjectId) (types.Site, error) {
 	return result, nil
 }
 
+// Find get the first site with a given title
+func (r *Repo) Find(title string) (types.Site, error) {
+	result := types.Site{}
+	err := r.Coll.Find(bson.M{"title": title}).One(&result)
+	if err != nil {
+		return result, err
+	}
+
+	return result, nil
+}
+
 // FindAll get all sites
 func (r *Repo) FindAll() ([]types.Site, error) {
 	results := []types.Site{}
@@ -76,4 +87,8 @@ func (r *Repo) FindAll() ([]types.Site, error) {
 	}
 
 	return results, nil
+}
+
+func (r *Repo) Drop() error {
+	return r.Coll.DropCollection()
 }

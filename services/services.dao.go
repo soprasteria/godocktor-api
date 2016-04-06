@@ -98,3 +98,7 @@ func (r *Repo) IsExist(title string) bool {
 	}
 	return true
 }
+
+func (r *Repo) Drop() error {
+	return r.Coll.DropCollection()
+}

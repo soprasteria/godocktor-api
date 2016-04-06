@@ -21,4 +21,5 @@ type RepoServices interface {
 	FindAllByRegex(nameRegex string) ([]types.Service, error)
 	// IsExist checks that the service exists with given title
 	IsExist(title string) bool
+	Drop() error
 }

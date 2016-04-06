@@ -15,8 +15,11 @@ type RepoUsers interface {
 	FindByID(id string) (types.User, error)
 	// FindByIDBson get the user by its id
 	FindByIDBson(id bson.ObjectId) (types.User, error)
+	// Find get the first user with a given username
+	Find(username string) (types.User, error)
 	// FindAll get all users
 	FindAll() ([]types.User, error)
 	// FindAllByGroupID get all users by a group ID
 	FindAllByGroupID(id bson.ObjectId) ([]types.User, error)
+	Drop() error
 }

@@ -88,3 +88,7 @@ func (r *Repo) FindAll() ([]types.Daemon, error) {
 
 	return results, nil
 }
+
+func (r *Repo) Drop() error {
+	return r.Coll.DropCollection()
+}

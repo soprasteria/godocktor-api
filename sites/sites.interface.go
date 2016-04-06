@@ -15,6 +15,9 @@ type RepoSites interface {
 	FindByID(id string) (types.Site, error)
 	// FindByIDBson get the site by its id
 	FindByIDBson(id bson.ObjectId) (types.Site, error)
+	// Find get the first site with a given title
+	Find(title string) (types.Site, error)
 	// FindAll get all sites
 	FindAll() ([]types.Site, error)
+	Drop() error
 }
