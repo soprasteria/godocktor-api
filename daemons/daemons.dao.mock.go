@@ -16,6 +16,18 @@ func NewMockDocktorDaemons() *MockDocktorDaemons {
 	return &MockDocktorDaemons{}
 }
 
+// Save daemon into database
+func (r *MockDocktorDaemons) Save(daemon types.Daemon) (types.Daemon, error) {
+	args := r.Mock.Called(daemon)
+	return args.Get(0).(types.Daemon), args.Error(1)
+}
+
+// Delete a daemon in database
+func (r *MockDocktorDaemons) Delete(id bson.ObjectId) (bson.ObjectId, error) {
+	args := r.Mock.Called(id)
+	return args.Get(0).(bson.ObjectId), args.Error(1)
+}
+
 // FindByID get the daemon by its id
 func (r *MockDocktorDaemons) FindByID(id string) (types.Daemon, error) {
 	args := r.Mock.Called(id)

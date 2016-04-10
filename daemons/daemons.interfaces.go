@@ -7,6 +7,10 @@ import (
 
 // RepoDaemons is the repo for daemons
 type RepoDaemons interface {
+	// Save a daemon into database
+	Save(daemon types.Daemon) (types.Daemon, error)
+	// Delete a daemon in database
+	Delete(id bson.ObjectId) (bson.ObjectId, error)
 	// FindByID get the daemon by its id
 	FindByID(id string) (types.Daemon, error)
 	// FindByIDBson get the daemon by its (bson representation)
