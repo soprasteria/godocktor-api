@@ -98,3 +98,8 @@ func (r *Repo) IsExist(title string) bool {
 	}
 	return true
 }
+
+// Drop drops the content of the collection
+func (r *Repo) Drop() error {
+	return r.Coll.DropCollection()
+}

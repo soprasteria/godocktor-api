@@ -17,6 +17,8 @@ type RepoDaemons interface {
 	FindByIDBson(id bson.ObjectId) (types.Daemon, error)
 	// Find get the first daemon with a given name
 	Find(name string) (types.Daemon, error)
-	// Find get the first daemon with a given name
+	// FindAll get all daemons
 	FindAll() ([]types.Daemon, error)
+	// Drop drops the content of the collection
+	Drop() error
 }

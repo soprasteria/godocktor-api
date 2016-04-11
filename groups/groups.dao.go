@@ -201,3 +201,8 @@ func (r *Repo) UpdateContainer(group types.Group, container types.Container) err
 	)
 	return err
 }
+
+// Drop drops the content of the collection
+func (r *Repo) Drop() error {
+	return r.Coll.DropCollection()
+}

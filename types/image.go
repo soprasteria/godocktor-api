@@ -19,23 +19,27 @@ type Image struct {
 }
 
 // AddVariable adds a Variable to the Image
-func (i *Image) AddVariable(v Variable) {
-	i.Variables = append(i.Variables, v)
+func (i *Image) AddVariable(v *Variable) *Image {
+	i.Variables = append(i.Variables, *v)
+	return i
 }
 
 // AddPort adds a Port to the Image
-func (i *Image) AddPort(p Port) {
-	i.Ports = append(i.Ports, p)
+func (i *Image) AddPort(p *Port) *Image {
+	i.Ports = append(i.Ports, *p)
+	return i
 }
 
 // AddVolume adds a Volume to the Image
-func (i *Image) AddVolume(v Volume) {
-	i.Volumes = append(i.Volumes, v)
+func (i *Image) AddVolume(v *Volume) *Image {
+	i.Volumes = append(i.Volumes, *v)
+	return i
 }
 
 // AddParameter adds a Parameter to the Image
-func (i *Image) AddParameter(p Parameter) {
-	i.Parameters = append(i.Parameters, p)
+func (i *Image) AddParameter(p *Parameter) *Image {
+	i.Parameters = append(i.Parameters, *p)
+	return i
 }
 
 // Images is a slice of image
