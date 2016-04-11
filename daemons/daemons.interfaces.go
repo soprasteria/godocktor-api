@@ -19,5 +19,6 @@ type RepoDaemons interface {
 	Find(name string) (types.Daemon, error)
 	// FindAll get all daemons
 	FindAll() ([]types.Daemon, error)
+	// Drop drops the content of the collection
 	Drop() error
 }

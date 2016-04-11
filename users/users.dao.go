@@ -100,6 +100,7 @@ func (r *Repo) FindAllByGroupID(id bson.ObjectId) ([]types.User, error) {
 	return results, nil
 }
 
+// Drop drops the content of the collection
 func (r *Repo) Drop() error {
 	return r.Coll.DropCollection()
 }

@@ -19,5 +19,6 @@ type RepoSites interface {
 	Find(title string) (types.Site, error)
 	// FindAll get all sites
 	FindAll() ([]types.Site, error)
+	// Drop drops the content of the collection
 	Drop() error
 }

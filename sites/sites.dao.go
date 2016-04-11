@@ -89,6 +89,7 @@ func (r *Repo) FindAll() ([]types.Site, error) {
 	return results, nil
 }
 
+// Drop drops the content of the collection
 func (r *Repo) Drop() error {
 	return r.Coll.DropCollection()
 }

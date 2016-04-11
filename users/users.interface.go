@@ -21,5 +21,6 @@ type RepoUsers interface {
 	FindAll() ([]types.User, error)
 	// FindAllByGroupID get all users by a group ID
 	FindAllByGroupID(id bson.ObjectId) ([]types.User, error)
+	// Drop drops the content of the collection
 	Drop() error
 }
