@@ -202,6 +202,15 @@ func (r *Repo) UpdateContainer(group types.Group, container types.Container) err
 	return err
 }
 
+// SaveContainer saves a container to the given group
+func (r *Repo) SaveContainer(group types.Group, container types.Container) error {
+	err := r.Coll.Update(
+		bson.M{"_id": group.ID},
+		bson.M{"$push": bson.M{"containers": container}},
+	)
+	return err
+}
+
 // Drop drops the content of the collection
 func (r *Repo) Drop() error {
 	return r.Coll.DropCollection()

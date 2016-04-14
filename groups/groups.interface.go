@@ -29,6 +29,8 @@ type RepoGroups interface {
 	FilterByContainer(groupNameRegex string, service string, containersID []string, imageRegex string) ([]types.ContainerWithGroup, error)
 	// UpdateContainer updates the container from the given group
 	UpdateContainer(group types.Group, container types.Container) error
+	// SaveContainer saves a container to the given group
+	SaveContainer(types.Group, types.Container) error
 	// Drop drops the content of the collection
 	Drop() error
 }
