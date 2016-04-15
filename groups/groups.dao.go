@@ -1,8 +1,6 @@
 package groups
 
 import (
-	"fmt"
-
 	"github.com/soprasteria/godocktor-api/types"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
@@ -188,7 +186,6 @@ func (r *Repo) FilterByContainer(groupNameRegex string, service string, containe
 	return
 }
 
-// UpdateContainer updates the container from the given group
 // update({
 //        _id: ObjectId("id"),
 //        "containers._id": ObjectId("id")
@@ -196,7 +193,7 @@ func (r *Repo) FilterByContainer(groupNameRegex string, service string, containe
 //        $set: {"containers.$": {<container object>}}
 //    }
 // );
-func (r *Repo) UpdateContainer(group types.Group, container types.Container) error {
+func (r *Repo) updateContainer(group types.Group, container types.Container) error {
 	err := r.Coll.Update(
 		bson.M{"_id": group.ID, "containers._id": container.ID},
 		bson.M{"$set": bson.M{"containers.$": container}},
@@ -206,20 +203,20 @@ func (r *Repo) UpdateContainer(group types.Group, container types.Container) err
 
 // SaveContainer saves a container to the given group
 func (r *Repo) SaveContainer(group types.Group, container types.Container) error {
-	results := []types.ContainerWithGroupID{}
+	var results []interface{}
 	// Check if there's already a container with this _id
 	operations := []bson.M{
 		bson.M{"$match": bson.M{"_id": group.ID}},
 		bson.M{"$unwind": "$containers"},
 		bson.M{"$match": bson.M{"containers._id": container.ID}},
-		bson.M{"$project": bson.M{"containers": 1}},
+		bson.M{"$group": bson.M{"_id": "null", "count": bson.M{"$sum": 1}}},
 	}
 	err := r.Coll.Pipe(operations).All(&results)
 	if err != nil {
 		return err
 	}
 	if len(results) > 0 {
-		return fmt.Errorf("A container with ID %v is already present in the group %v", container.ID, group.Title)
+		return r.updateContainer(group, container)
 	}
 
 	err = r.Coll.Update(

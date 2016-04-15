@@ -27,8 +27,6 @@ type RepoGroups interface {
 	FindAllWithContainers(groupNameRegex string, containersID []string) ([]types.Group, error)
 	// FilterByContainer get all groups matching a regex and a list of containers
 	FilterByContainer(groupNameRegex string, service string, containersID []string, imageRegex string) ([]types.ContainerWithGroup, error)
-	// UpdateContainer updates the container from the given group
-	UpdateContainer(group types.Group, container types.Container) error
 	// SaveContainer saves a container to the given group
 	SaveContainer(types.Group, types.Container) error
 	// Drop drops the content of the collection
