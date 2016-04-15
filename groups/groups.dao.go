@@ -1,6 +1,8 @@
 package groups
 
 import (
+	"fmt"
+
 	"github.com/soprasteria/godocktor-api/types"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
@@ -204,7 +206,23 @@ func (r *Repo) UpdateContainer(group types.Group, container types.Container) err
 
 // SaveContainer saves a container to the given group
 func (r *Repo) SaveContainer(group types.Group, container types.Container) error {
-	err := r.Coll.Update(
+	results := []types.ContainerWithGroupID{}
+	// Check if there's already a container with this _id
+	operations := []bson.M{
+		bson.M{"$match": bson.M{"_id": group.ID}},
+		bson.M{"$unwind": "$containers"},
+		bson.M{"$match": bson.M{"containers._id": container.ID}},
+		bson.M{"$project": bson.M{"containers": 1}},
+	}
+	err := r.Coll.Pipe(operations).All(&results)
+	if err != nil {
+		return err
+	}
+	if len(results) > 0 {
+		return fmt.Errorf("A container with ID %v is already present in the group %v", container.ID, group.Title)
+	}
+
+	err = r.Coll.Update(
 		bson.M{"_id": group.ID},
 		bson.M{"$push": bson.M{"containers": container}},
 	)
