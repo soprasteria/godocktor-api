@@ -1,8 +1,8 @@
 package users
 
 import (
-	"gopkg.in/mgo.v2/bson"
 	"github.com/soprasteria/godocktor-api/types"
+	"gopkg.in/mgo.v2/bson"
 )
 
 // RepoUsers is the repo for users

@@ -1,9 +1,9 @@
 package users
 
 import (
+	"github.com/soprasteria/godocktor-api/types"
 	"github.com/stretchr/testify/mock"
 	"gopkg.in/mgo.v2/bson"
-	"github.com/soprasteria/godocktor-api/types"
 )
 
 // MockDocktorUsers mocks Docktor users API
