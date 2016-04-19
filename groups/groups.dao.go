@@ -186,6 +186,46 @@ func (r *Repo) FilterByContainer(groupNameRegex string, service string, containe
 	return
 }
 
+// FilterByContainerAndService returns the data for containers matching a specified group and service
+func (r *Repo) FilterByContainerAndService(groupNameRegex string, serviceNameRegex string, containersID []string) (containersWithGroup []types.ContainerWithGroup, err error) {
+	results := []types.ContainerWithGroupID{}
+
+	// Aggregation in 3 steps to get a list of containers id from groups
+	// Filter the groups
+	filterGroupByTitle := bson.M{"$match": bson.M{
+		"title": &bson.RegEx{Pattern: groupNameRegex},
+	}}
+	// Get containers from filtered groups
+	getContainers := bson.M{"$unwind": "$containers"}
+	// Filter by containers
+	filterContainers := bson.M{"$match": bson.M{
+		"containers.containerId":  &bson.M{"$in": containersID},
+		"containers.serviceTitle": &bson.RegEx{Pattern: serviceNameRegex},
+	}}
+	// Get ids from containers
+	getIds := bson.M{"$project": bson.M{"container": "$containers"}}
+
+	operations := []bson.M{filterGroupByTitle, getContainers, filterContainers, getIds}
+	err = r.Coll.Pipe(operations).All(&results)
+	if err != nil {
+		return
+	}
+
+	// Get group entity for each container
+	for _, v := range results {
+		group, err := r.FindByIDBson(v.ID)
+		if err != nil {
+			return []types.ContainerWithGroup{}, err
+		}
+		crg := types.ContainerWithGroup{
+			Group:     group,
+			Container: v.Container,
+		}
+		containersWithGroup = append(containersWithGroup, crg)
+	}
+	return
+}
+
 // update({
 //        _id: ObjectId("id"),
 //        "containers._id": ObjectId("id")
