@@ -1,9 +1,9 @@
 package users
 
 import (
+	"github.com/soprasteria/godocktor-api/types"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
-	"github.com/soprasteria/godocktor-api/types"
 )
 
 // Repo is the repository for projects
