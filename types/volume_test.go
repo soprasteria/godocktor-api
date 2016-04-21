@@ -46,7 +46,7 @@ func ExampleVolumesEquals() {
 
 	v1 = Volumes{a, c}
 	v2 = Volumes{c, a}
-	fmt.Println(v1.Equals(v2)) // not same order
+	fmt.Println(v1.Equals(v2)) // not same order but equals
 
 	// Output:
 	// true
@@ -55,5 +55,5 @@ func ExampleVolumesEquals() {
 	// false
 	// false
 	// false
-	// false
+	// true
 }

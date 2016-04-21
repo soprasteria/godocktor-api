@@ -54,26 +54,11 @@ func (i Image) EqualsInConf(b Image) bool {
 	return i.Parameters.Equals(b.Parameters) && i.Ports.Equals(b.Ports) && i.Variables.Equals(b.Variables) && i.Volumes.Equals(b.Volumes)
 }
 
-// EqualsInConf compare two slices of images by comparing their configuration
-func (a Images) EqualsInConf(b Images) bool {
-
-	if a == nil && b == nil {
+// IsIncludeInConf checks that two images are compatible in configuration
+// It does not check the name for example, but will check ports, variables, parameters and volumes
+func (i Image) IsIncludeInConf(b Image) bool {
+	if i.ID == b.ID {
 		return true
 	}
-
-	if a == nil || b == nil {
-		return false
-	}
-
-	if len(a) != len(b) {
-		return false
-	}
-
-	for i := range a {
-		if !a[i].EqualsInConf(b[i]) {
-			return false
-		}
-	}
-
-	return true
+	return i.Parameters.IsIncluded(b.Parameters) && i.Ports.IsIncluded(b.Ports) && i.Variables.IsIncluded(b.Variables) && i.Volumes.IsIncluded(b.Volumes)
 }

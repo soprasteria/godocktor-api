@@ -33,11 +33,45 @@ func (a Parameters) Equals(b Parameters) bool {
 		return false
 	}
 
-	for i := range a {
-		if !a[i].Equals(b[i]) {
+	var aMap = map[string]Parameter{}
+	for _, v := range a {
+		aMap[v.Name] = v
+	}
+
+	for _, v := range b {
+		_, ok := aMap[v.Name]
+		if !ok {
 			return false
 		}
 	}
+	return true
+}
 
+// IsIncluded check that the first slices of parameters is included into the second
+func (a Parameters) IsIncluded(b Parameters) bool {
+
+	if a == nil && b == nil {
+		return true
+	}
+
+	if a == nil || b == nil {
+		return false
+	}
+
+	if len(a) > len(b) {
+		return false
+	}
+
+	var bMap = map[string]Parameter{}
+	for _, v := range b {
+		bMap[v.Name] = v
+	}
+
+	for _, v := range a {
+		_, ok := bMap[v.Name]
+		if !ok {
+			return false
+		}
+	}
 	return true
 }

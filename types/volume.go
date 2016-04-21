@@ -34,8 +34,48 @@ func (a Volumes) Equals(b Volumes) bool {
 		return false
 	}
 
-	for i := range a {
-		if !a[i].Equals(b[i]) {
+	var aMap = map[string]Volume{}
+	for _, v := range a {
+		key := v.Internal + ":" + v.Rights
+		aMap[key] = v
+	}
+
+	for _, v := range b {
+		key := v.Internal + ":" + v.Rights
+		_, ok := aMap[key]
+		if !ok {
+			return false
+		}
+	}
+
+	return true
+}
+
+// IsIncluded check that the first slice is included into the second
+func (a Volumes) IsIncluded(b Volumes) bool {
+
+	if a == nil && b == nil {
+		return true
+	}
+
+	if a == nil || b == nil {
+		return false
+	}
+
+	if len(a) > len(b) {
+		return false
+	}
+
+	var bMap = map[string]Volume{}
+	for _, v := range b {
+		key := v.Internal + ":" + v.Rights
+		bMap[key] = v
+	}
+
+	for _, v := range a {
+		key := v.Internal + ":" + v.Rights
+		_, ok := bMap[key]
+		if !ok {
 			return false
 		}
 	}

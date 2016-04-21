@@ -33,11 +33,46 @@ func (a Variables) Equals(b Variables) bool {
 		return false
 	}
 
-	for i := range a {
-		if !a[i].Equals(b[i]) {
+	var aMap = map[string]Variable{}
+	for _, v := range a {
+		aMap[v.Name] = v
+	}
+
+	for _, v := range b {
+		_, ok := aMap[v.Name]
+		if !ok {
 			return false
 		}
 	}
 
+	return true
+}
+
+// IsIncluded check that the first slices of variables is included into the second
+func (a Variables) IsIncluded(b Variables) bool {
+
+	if a == nil && b == nil {
+		return true
+	}
+
+	if a == nil || b == nil {
+		return false
+	}
+
+	if len(a) > len(b) {
+		return false
+	}
+
+	var bMap = map[string]Variable{}
+	for _, v := range b {
+		bMap[v.Name] = v
+	}
+
+	for _, v := range a {
+		_, ok := bMap[v.Name]
+		if !ok {
+			return false
+		}
+	}
 	return true
 }
