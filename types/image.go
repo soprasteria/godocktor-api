@@ -62,3 +62,12 @@ func (i Image) IsIncludeInConf(b Image) bool {
 	}
 	return i.Parameters.IsIncluded(b.Parameters) && i.Ports.IsIncluded(b.Ports) && i.Variables.IsIncluded(b.Variables) && i.Volumes.IsIncluded(b.Volumes)
 }
+
+// IsCompatibleWithContainer checks that an image is compatible with a Container instance
+// It does not check the name for example, but will check ports, variables, parameters and volumes
+func (i Image) IsCompatibleWithContainer(b Container) bool {
+	return i.Parameters.IsIncluded(b.Parameters.AsParameters()) &&
+		i.Ports.IsIncluded(b.Ports.AsPorts()) &&
+		i.Variables.IsIncluded(b.Variables.AsVariables()) &&
+		i.Volumes.IsIncluded(b.Volumes.AsVolumes())
+}
