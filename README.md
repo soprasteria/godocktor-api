@@ -16,3 +16,9 @@ defer dock.Close()
 fmt.Printf("Redis exist ? %v\n", dock.Services().IsExist("Redis"))
 
 ```
+
+## License
+
+GNU GENERAL PUBLIC LICENSE 3
+
+See License Files
