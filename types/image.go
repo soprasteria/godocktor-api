@@ -54,9 +54,9 @@ func (i Image) EqualsInConf(b Image) bool {
 	return i.Parameters.Equals(b.Parameters) && i.Ports.Equals(b.Ports) && i.Variables.Equals(b.Variables) && i.Volumes.Equals(b.Volumes)
 }
 
-// IsIncludeInConf checks that two images are compatible in configuration
+// IsIncludedInConf checks that two images are compatible in configuration
 // It does not check the name for example, but will check ports, variables, parameters and volumes
-func (i Image) IsIncludeInConf(b Image) bool {
+func (i Image) IsIncludedInConf(b Image) bool {
 	if i.ID == b.ID {
 		return true
 	}
