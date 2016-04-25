@@ -1,130 +1,29 @@
 package groups
 
 import (
+	"fmt"
+
 	"github.com/soprasteria/godocktor-api/types"
-	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
 
-// Repo is the repository for projects
-type Repo struct {
-	Coll *mgo.Collection
-}
+// FindContainer finds the first container with given containerID
+func (r *Repo) FindContainer(groupID bson.ObjectId, containerID string) (types.ContainerWithGroupID, error) {
+	result := types.ContainerWithGroupID{}
+	// Filter the groups
+	filterGroupByTitle := bson.M{"$match": bson.M{"_id": groupID}}
+	// Get containers from filtered groups
+	getContainers := bson.M{"$unwind": "$containers"}
+	// Filter by containers
+	filterContainers := bson.M{"$match": bson.M{
+		"containers.containerId": &bson.M{"$in": []string{containerID}},
+	}}
+	// Get ids from containers
+	getIds := bson.M{"$project": bson.M{"container": "$containers"}}
 
-// Save a group into a database
-func (r *Repo) Save(group types.Group) (types.Group, error) {
-	if group.ID.Hex() == "" {
-		group.ID = bson.NewObjectId()
-	}
-
-	nb, err := r.Coll.FindId(group.ID).Count()
-	if err != nil {
-		return group, err
-	}
-
-	if nb != 0 {
-		err := r.Coll.UpdateId(group.ID, group)
-		if err != nil {
-			return group, err
-		}
-	} else {
-		err := r.Coll.Insert(group)
-		if err != nil {
-			return group, err
-		}
-	}
-	return group, nil
-}
-
-// Delete a group in database
-func (r *Repo) Delete(id bson.ObjectId) (bson.ObjectId, error) {
-	err := r.Coll.RemoveId(id)
-	if err != nil {
-		return id, err
-	}
-	return id, nil
-}
-
-// FindByID get the group by its id
-func (r *Repo) FindByID(id string) (types.Group, error) {
-	result := types.Group{}
-	err := r.Coll.FindId(bson.ObjectIdHex(id)).One(&result)
-	if err != nil {
-		return result, err
-	}
-
-	return result, nil
-}
-
-// FindByIDBson get the group by its id (as a bson object)
-func (r *Repo) FindByIDBson(id bson.ObjectId) (types.Group, error) {
-	result := types.Group{}
-	err := r.Coll.FindId(id).One(&result)
-	if err != nil {
-		return result, err
-	}
-
-	return result, nil
-}
-
-// Find get the first group with a given name
-func (r *Repo) Find(name string) (types.Group, error) {
-	result := types.Group{}
-	err := r.Coll.Find(bson.M{"title": name}).One(&result)
-	if err != nil {
-		return result, err
-	}
-
-	return result, nil
-}
-
-// FindAll get all groups
-func (r *Repo) FindAll() ([]types.Group, error) {
-	results := []types.Group{}
-	err := r.Coll.Find(bson.M{}).All(&results)
-	if err != nil {
-		return results, err
-	}
-
-	return results, nil
-}
-
-// FindAllByName get all groups by the give name
-func (r *Repo) FindAllByName(name string) ([]types.Group, error) {
-	results := []types.Group{}
-	err := r.Coll.Find(bson.M{"title": name}).All(&results)
-	if err != nil {
-		return results, err
-	}
-
-	return results, nil
-}
-
-// FindAllByRegex get all groups by the regex name
-func (r *Repo) FindAllByRegex(nameRegex string) ([]types.Group, error) {
-	results := []types.Group{}
-	err := r.Coll.Find(bson.M{"title": &bson.RegEx{Pattern: nameRegex}}).All(&results)
-	if err != nil {
-		return results, err
-	}
-
-	return results, nil
-}
-
-// FindAllWithContainers get all groups that contains a list of containers
-func (r *Repo) FindAllWithContainers(groupNameRegex string, containersID []string) ([]types.Group, error) {
-	results := []types.Group{}
-	err := r.Coll.Find(
-		bson.M{
-			"title":                  &bson.RegEx{Pattern: groupNameRegex},
-			"containers.containerId": &bson.M{"$in": containersID},
-		}).All(&results)
-
-	if err != nil {
-		return results, err
-	}
-
-	return results, nil
+	operations := []bson.M{filterGroupByTitle, getContainers, filterContainers, getIds}
+	err := r.Coll.Pipe(operations).One(&result)
+	return result, err
 }
 
 // FilterByContainer get all groups matching a regex and a list of containers
@@ -135,7 +34,7 @@ func (r *Repo) FindAllWithContainers(groupNameRegex string, containersID []strin
 //				},
 //				{ "$unwind" : "$containers" },
 //				{ "$match" : {
-//						"containers.containerId": {"$in": ["ID"],
+//						"containers.containerId": {"$in": ["ID"]},
 //						"containers.serviceTitle": "Redis",
 //						"containers.image" : {"$regex" : "redis:2.*"}
 //				}}
@@ -226,6 +125,63 @@ func (r *Repo) FilterByContainerAndService(groupNameRegex string, serviceNameReg
 	return
 }
 
+// FindContainersOnDaemon get all containers that are declared to be run/created on the daemon.
+// Can be filtered out with containersID. Will get only containers that are not in this slice.
+// db.getCollection('groups').aggregate([
+//     {"$match" :
+//            {containers: {
+//                $elemMatch: {daemonId : "<daemon>" }
+//            }}
+//     },
+//     { "$unwind" : "$containers" },
+//     { "$match" : {
+// 	        "containers.containerId": {"$nin": ["<containerID1>","<containerID2>"]},
+//          "containers.daemonId": "<daemon>"
+//     }},
+//     { "$project" : {"container" : "$containers"}}
+//    ]);
+func (r *Repo) FindContainersOnDaemon(daemon types.Daemon, containersID []string) (containersWithGroup []types.ContainerWithGroup, err error) {
+	results := []types.ContainerWithGroupID{}
+
+	fmt.Println(daemon.ID)
+	// Aggregation in 4 steps to get a list of containers
+	// Filter the groups
+	filterByDaemon := bson.M{"$match": bson.M{
+		"containers": &bson.M{"$elemMatch": &bson.M{"daemonId": daemon.ID.Hex()}},
+	}}
+	// Get containers from filtered groups
+	getContainers := bson.M{"$unwind": "$containers"}
+	// Containers filtered by daemon and docker containers
+	filterContainers := bson.M{"$match": bson.M{
+		"containers.containerId": &bson.M{"$nin": containersID},
+		"containers.daemonId":    daemon.ID.Hex(),
+	}}
+	// Get ids from containers
+	getIds := bson.M{"$project": bson.M{"container": "$containers"}}
+
+	operations := []bson.M{filterByDaemon, getContainers, filterContainers, getIds}
+	err = r.Coll.Pipe(operations).All(&results)
+	if err != nil {
+		return
+	}
+
+	fmt.Println(len(results))
+
+	// Get group entity for each container
+	for _, v := range results {
+		group, err := r.FindByIDBson(v.ID)
+		if err != nil {
+			return []types.ContainerWithGroup{}, err
+		}
+		crg := types.ContainerWithGroup{
+			Group:     group,
+			Container: v.Container,
+		}
+		containersWithGroup = append(containersWithGroup, crg)
+	}
+	return
+}
+
 // update({
 //        _id: ObjectId("id"),
 //        "containers._id": ObjectId("id")
@@ -266,7 +222,10 @@ func (r *Repo) SaveContainer(group types.Group, container types.Container) error
 	return err
 }
 
-// Drop drops the content of the collection
-func (r *Repo) Drop() error {
-	return r.Coll.DropCollection()
+// DeleteContainerByID deletes the container by its docker container ID. The group in which it is, is required
+func (r *Repo) DeleteContainerByID(groupID bson.ObjectId, containerID string) error {
+	return r.Coll.Update(
+		bson.M{"_id": groupID},
+		bson.M{"$pull": bson.M{"containerId": containerID}},
+	)
 }

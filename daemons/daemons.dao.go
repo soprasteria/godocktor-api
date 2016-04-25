@@ -68,9 +68,20 @@ func (r *Repo) FindByIDBson(id bson.ObjectId) (types.Daemon, error) {
 }
 
 // Find get the first daemon with a given name (representing the host)
-func (r *Repo) Find(name string) (types.Daemon, error) {
+func (r *Repo) Find(host string) (types.Daemon, error) {
 	result := types.Daemon{}
-	err := r.Coll.Find(bson.M{"host": name}).One(&result)
+	err := r.Coll.Find(bson.M{"host": host}).One(&result)
+	if err != nil {
+		return result, err
+	}
+
+	return result, nil
+}
+
+// FindAllByHost gets all the daemons with a given name (representing the host)
+func (r *Repo) FindAllByHost(host string) ([]types.Daemon, error) {
+	result := []types.Daemon{}
+	err := r.Coll.Find(bson.M{"host": host}).All(&result)
 	if err != nil {
 		return result, err
 	}
