@@ -70,6 +70,18 @@ type VariableContainer struct {
 	Value string        `bson:"value"`
 }
 
+// Format prints a parameter container as a string like : key=value
+func (v VariableContainer) Format() string {
+	if v.Name == "" || v.Value == "" {
+		return ""
+	}
+	return v.Name + "=" + v.Value
+}
+
+func (v VariableContainer) String() string {
+	return v.Format()
+}
+
 // VariablesContainer is a slice of VariableContainer
 type VariablesContainer []VariableContainer
 
