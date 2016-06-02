@@ -1,6 +1,11 @@
 package types
 
-import "gopkg.in/mgo.v2/bson"
+import (
+	"fmt"
+	"strings"
+
+	"gopkg.in/mgo.v2/bson"
+)
 
 // Volume is a binding between a folder from inside the container to the host machine
 type Volume struct {
@@ -9,6 +14,36 @@ type Volume struct {
 	Value       string        `bson:"value"`            // volume outside the contaienr
 	Rights      string        `bson:"rights,omitempty"` // ro or rw
 	Description string        `bson:"description"`
+}
+
+// Print prints a volume as simple string
+func (a Volume) Print() string {
+	rights := "rw"
+	if a.Rights != "" {
+		rights = a.Rights
+	}
+	return a.Value + ":" + a.Internal + ":" + rights
+}
+
+func (a Volume) String() string {
+	return a.Print()
+}
+
+// Check that the volume is well formated
+func (a Volume) Check() (bool, error) {
+	if a.Rights != "" && a.Rights != "rw" && a.Rights != "ro" {
+		return false, fmt.Errorf("Volume rights was %q but should be rw (read-write) or ro (read-only)", a.Rights)
+	}
+
+	if a.Internal != "" && !strings.HasPrefix(a.Internal, "/") {
+		return false, fmt.Errorf("Volume %q should begin by a '/'. Check that your volume is path like /something/like/this", a.Internal)
+	}
+
+	if a.Value != "" && !strings.HasPrefix(a.Value, "/") {
+		return false, fmt.Errorf("Volume %q should begin by a '/'. Check that your volume is path like /something/like/this", a.Value)
+	}
+
+	return true, nil
 }
 
 // Volumes is a slice of volumes
