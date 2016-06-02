@@ -23,4 +23,5 @@ type Client interface {
 	Users() users.RepoUsers
 	Sites() sites.RepoSites
 	Close()
+	FindUsedPortsOnDaemon(daemonID string) ([]int, error)
 }

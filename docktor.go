@@ -64,3 +64,12 @@ func (dock *Docktor) Users() users.RepoUsers {
 func (dock *Docktor) Sites() sites.RepoSites {
 	return dock.sites
 }
+
+// FindUsedPortsOnDaemon returns a list of used port for the given daemon
+func (dock *Docktor) FindUsedPortsOnDaemon(daemonID string) ([]int, error) {
+	if _, err := dock.Daemons().FindByID(daemonID); err != nil {
+		return []int{}, err
+	}
+
+	return dock.Groups().FindUsedPortsOnDaemon(daemonID)
+}

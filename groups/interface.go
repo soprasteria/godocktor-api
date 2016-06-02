@@ -29,6 +29,10 @@ type RepoGroups interface {
 	FindAllByRegex(nameRegex string) ([]types.Group, error)
 	// FindAllWithContainers get all groups that contains a list of containers
 	FindAllWithContainers(groupNameRegex string, containersID []string) ([]types.Group, error)
+	// FindAvailablePortsRangeOnDaemon get an available range of <nbConsecutivePorts> for <daemon>
+	FindAvailablePortsRangeOnDaemon(nbConsecutivePorts int, daemon string) (types.PortsRange, error)
+	// FindUsedPortsRangeForDaemon get all used ports range for daemon
+	FindUsedPortsRangeForDaemon(daemon string) ([]types.PortsRange, error)
 
 	// Containers
 
@@ -44,4 +48,6 @@ type RepoGroups interface {
 	SaveContainer(types.Group, types.Container) error
 	// DeleteContainerByID deletes the container by its docker container ID. The group in which it is, is required
 	DeleteContainerByID(groupID bson.ObjectId, containerID string) error
+	// FindUsedPortsOnDaemon finds used ports on daemon
+	FindUsedPortsOnDaemon(daemonID string) ([]int, error)
 }

@@ -1,6 +1,10 @@
 package types
 
-import "gopkg.in/mgo.v2/bson"
+import (
+	"strconv"
+
+	"gopkg.in/mgo.v2/bson"
+)
 
 // PortContainer defines a binding between an external and an internal port
 type PortContainer struct {
@@ -8,6 +12,20 @@ type PortContainer struct {
 	Internal int           `bson:"internal"`
 	External int           `bson:"external"`
 	Protocol string        `bson:"protocol"`
+}
+
+// Print print the port container as a simple format like 1000:1000/tcp
+func (port PortContainer) Print() string {
+	protocol := ""
+	if port.Protocol != "" {
+		protocol = "/" + port.Protocol
+	}
+
+	return strconv.Itoa(port.External) + ":" + strconv.Itoa(port.Internal) + protocol
+}
+
+func (port PortContainer) String() string {
+	return port.Print()
 }
 
 // PortsContainer is a slice of PortContainer

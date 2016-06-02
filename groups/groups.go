@@ -131,3 +131,37 @@ func (r *Repo) FindAllWithContainers(groupNameRegex string, containersID []strin
 
 	return results, nil
 }
+
+// FindAvailablePortsRangeOnDaemon get an available range of <nbConsecutivePorts> for <daemon>
+func (r *Repo) FindAvailablePortsRangeOnDaemon(nbConsecutivePorts int, daemon string) (types.PortsRange, error) {
+
+	usedPortsRanges, err := r.FindUsedPortsRangeForDaemon(daemon)
+	if err != nil {
+		return types.PortsRange{}, err
+	}
+
+	return types.FindAvailablePortRange(nbConsecutivePorts, usedPortsRanges)
+
+}
+
+// FindUsedPortsRangeForDaemon get all used ports range for daemon
+// Explaination : there is default port range on a group.
+func (r *Repo) FindUsedPortsRangeForDaemon(daemon string) ([]types.PortsRange, error) {
+	var (
+		groups          = []types.Group{}
+		usedPortsRanges = []types.PortsRange{}
+	)
+
+	err := r.Coll.Find(bson.M{"daemon": daemon}).All(&groups)
+	if err != nil {
+		return usedPortsRanges, err
+	}
+
+	for _, g := range groups {
+		if r, err := g.GetPortsRange(); err != nil {
+			usedPortsRanges = append(usedPortsRanges, r)
+		}
+	}
+
+	return usedPortsRanges, nil
+}

@@ -229,3 +229,54 @@ func (r *Repo) DeleteContainerByID(groupID bson.ObjectId, containerID string) er
 		bson.M{"$pull": bson.M{"containerId": containerID}},
 	)
 }
+
+/*
+FindUsedPortsOnDaemon finds ports already used for a daemon
+db.getCollection('groups').aggregate(
+[
+    {'$unwind': '$containers'},
+    {'$match': {"containers.daemonId" : "<daemonid>"}},
+    {'$unwind' : '$containers.ports'},
+    {'$group':
+        {
+            _id : 0,
+            'usedPort' : {'$addToSet': '$containers.ports.external'}
+        }
+    },
+    {'$unwind' : '$usedPort'},
+    {'$project' :  {_id: 0, 'usedPort': 1} }
+]
+)*/
+func (r *Repo) FindUsedPortsOnDaemon(daemonID string) ([]int, error) {
+	var (
+		mgoResults []usedPort
+		usedPorts  []int
+	)
+	// Check if there's already a container with this _id
+	operations := []bson.M{
+		bson.M{"$unwind": "$containers"},
+		bson.M{"$match": bson.M{"containers.daemonId": daemonID}},
+		bson.M{"$unwind": "$containers.ports"},
+		bson.M{"$group": bson.M{"_id": 0, "port": bson.M{"$addToSet": "$containers.ports.external"}}},
+		bson.M{"$unwind": "$port"},
+		bson.M{"$project": bson.M{"_id": 0, "port": 1}},
+	}
+	err := r.Coll.Pipe(operations).All(&mgoResults)
+	if err != nil {
+		return []int{}, err
+	}
+
+	fmt.Printf("Result : %+v\n", mgoResults)
+
+	for _, v := range mgoResults {
+		usedPorts = append(usedPorts, v.Port)
+	}
+
+	fmt.Printf("Used ports : %+v\n", usedPorts)
+
+	return usedPorts, nil
+}
+
+type usedPort struct {
+	Port int `bson:"port"`
+}
