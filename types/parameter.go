@@ -13,6 +13,15 @@ type Parameter struct {
 // Parameters is a slice of parameters
 type Parameters []Parameter
 
+func (a Parameter) String() string {
+	return a.Print()
+}
+
+// Print returns a simple format of a parameter
+func (a Parameter) Print() string {
+	return a.Name + "=" + a.Value
+}
+
 // Equals checks that two parameters are equals based on some properties
 func (a Parameter) Equals(b Parameter) bool {
 	return a.Name == b.Name
