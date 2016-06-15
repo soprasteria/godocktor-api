@@ -50,4 +50,6 @@ type RepoGroups interface {
 	DeleteContainerByID(groupID bson.ObjectId, containerID string) error
 	// FindUsedPortsOnDaemon finds used ports on daemon
 	FindUsedPortsOnDaemon(daemonID string) ([]int, error)
+	FindContainerByName(groupName string, containerName string) (types.ContainerWithGroupID, error)
+	FindContainersByService(groupName string, serviceName string) ([]types.ContainerWithGroupID, error)
 }

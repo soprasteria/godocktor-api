@@ -26,6 +26,38 @@ func (r *Repo) FindContainer(groupID bson.ObjectId, containerID string) (types.C
 	return result, err
 }
 
+// FindContainerByName finds the first container with given name
+// Container Name could have a "/" prefix or not
+func (r *Repo) FindContainerByName(groupName string, containerName string) (types.ContainerWithGroupID, error) {
+	result := types.ContainerWithGroupID{}
+
+	// match container names like "/ContainerName" or "ContainerName"
+	nameRegex := "^\\/?" + containerName + "$"
+
+	operations := []bson.M{
+		bson.M{"$match": bson.M{"title": groupName}},
+		bson.M{"$unwind": "$containers"},
+		bson.M{"$match": &bson.M{"containers.name": &bson.RegEx{Pattern: nameRegex}}},
+		bson.M{"$project": bson.M{"container": "$containers"}},
+	}
+	err := r.Coll.Pipe(operations).One(&result)
+	return result, err
+}
+
+// FindContainersByService finds all the containers with given service name
+func (r *Repo) FindContainersByService(groupName string, serviceName string) ([]types.ContainerWithGroupID, error) {
+	result := []types.ContainerWithGroupID{}
+
+	operations := []bson.M{
+		bson.M{"$match": bson.M{"title": groupName}},
+		bson.M{"$unwind": "$containers"},
+		bson.M{"$match": &bson.M{"containers.serviceTitle": serviceName}},
+		bson.M{"$project": bson.M{"container": "$containers"}},
+	}
+	err := r.Coll.Pipe(operations).All(&result)
+	return result, err
+}
+
 // FilterByContainer get all groups matching a regex and a list of containers
 //	db.getCollection('groups').aggregate([
 //				{"$match" : {
