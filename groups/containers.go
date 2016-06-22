@@ -1,8 +1,6 @@
 package groups
 
 import (
-	"fmt"
-
 	"github.com/soprasteria/godocktor-api/types"
 	"gopkg.in/mgo.v2/bson"
 )
@@ -143,7 +141,6 @@ func (r *Repo) FilterByContainerAndService(groupNameRegex string, serviceNameReg
 func (r *Repo) FindContainersOnDaemon(daemon types.Daemon, containersID []string) (containersWithGroup []types.ContainerWithGroup, err error) {
 	results := []types.ContainerWithGroupID{}
 
-	fmt.Println(daemon.ID)
 	// Aggregation in 4 steps to get a list of containers
 	// Filter the groups
 	filterByDaemon := bson.M{"$match": bson.M{
@@ -164,8 +161,6 @@ func (r *Repo) FindContainersOnDaemon(daemon types.Daemon, containersID []string
 	if err != nil {
 		return
 	}
-
-	fmt.Println(len(results))
 
 	// Get group entity for each container
 	for _, v := range results {
