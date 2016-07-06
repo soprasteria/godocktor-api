@@ -89,6 +89,17 @@ func (r *Repo) FindAllByHost(host string) ([]types.Daemon, error) {
 	return result, nil
 }
 
+// FindAllByHostRegex gets all the daemons with a name (representing the host) matching the regex
+func (r *Repo) FindAllByHostRegex(hostregex string) ([]types.Daemon, error) {
+	result := []types.Daemon{}
+	err := r.Coll.Find(bson.M{"host": &bson.RegEx{Pattern: hostregex}}).All(&result)
+	if err != nil {
+		return result, err
+	}
+
+	return result, nil
+}
+
 // FindAll get all daemons
 func (r *Repo) FindAll() ([]types.Daemon, error) {
 	results := []types.Daemon{}
