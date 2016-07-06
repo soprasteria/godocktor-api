@@ -19,6 +19,8 @@ type RepoDaemons interface {
 	Find(name string) (types.Daemon, error)
 	// FindAllByHost gets all the daemons with a given name (representing the host)
 	FindAllByHost(host string) ([]types.Daemon, error)
+	// FindAllByHostRegex gets all the daemons with a name (representing the host) matching the regex
+	FindAllByHostRegex(hostregex string) ([]types.Daemon, error)
 	// FindAll get all daemons
 	FindAll() ([]types.Daemon, error)
 	// Drop drops the content of the collection
