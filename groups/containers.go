@@ -293,13 +293,9 @@ func (r *Repo) FindUsedPortsOnDaemon(daemonID string) ([]int, error) {
 		return []int{}, err
 	}
 
-	fmt.Printf("Result : %+v\n", mgoResults)
-
 	for _, v := range mgoResults {
 		usedPorts = append(usedPorts, v.Port)
 	}
-
-	fmt.Printf("Used ports : %+v\n", usedPorts)
 
 	return usedPorts, nil
 }
