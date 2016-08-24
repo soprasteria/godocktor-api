@@ -17,7 +17,7 @@ func (r *Repo) Save(user types.User) (types.User, error) {
 		user.ID = bson.NewObjectId()
 	}
 
-	_, err := r.Coll.UpsertId(user.ID, user)
+	_, err := r.Coll.UpsertId(user.ID, bson.M{"$set": user})
 	return user, err
 }
 
