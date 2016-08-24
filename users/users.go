@@ -17,23 +17,8 @@ func (r *Repo) Save(user types.User) (types.User, error) {
 		user.ID = bson.NewObjectId()
 	}
 
-	nb, err := r.Coll.FindId(user.ID).Count()
-	if err != nil {
-		return user, err
-	}
-
-	if nb != 0 {
-		err := r.Coll.UpdateId(user.ID, user)
-		if err != nil {
-			return user, err
-		}
-	} else {
-		err := r.Coll.Insert(user)
-		if err != nil {
-			return user, err
-		}
-	}
-	return user, nil
+	_, err := r.Coll.UpsertId(user.ID, user)
+	return user, err
 }
 
 // Delete a user in database
