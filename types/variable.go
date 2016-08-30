@@ -4,10 +4,10 @@ import "gopkg.in/mgo.v2/bson"
 
 // Variable like environment variables (GID of user for example)
 type Variable struct {
-	ID          bson.ObjectId `bson:"_id,omitempty"`
-	Name        string        `bson:"name"`
-	Value       string        `bson:"value,omitempty"`
-	Description string        `bson:"description"`
+	ID          bson.ObjectId `bson:"_id,omitempty" json:"id,omitempty"`
+	Name        string        `bson:"name" json:"name"`
+	Value       string        `bson:"value,omitempty" json:"value,omitempty"`
+	Description string        `bson:"description" json:"description"`
 }
 
 // Variables is a slice of variables

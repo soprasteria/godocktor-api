@@ -8,10 +8,10 @@ import (
 
 // FileSystem is a filesystem watched by the group
 type FileSystem struct {
-	ID          bson.ObjectId `bson:"_id,omitempty"`
-	Daemon      string        `bson:"daemon"`
-	Partition   string        `bson:"partition,omitempty"`
-	Description string        `bson:"description"`
+	ID          bson.ObjectId `bson:"_id,omitempty" json:"id,omitempty"`
+	Daemon      string        `bson:"daemon" json:"daemon"`
+	Partition   string        `bson:"partition,omitempty" json:"partition,omitempty"`
+	Description string        `bson:"description" json:"description"`
 }
 
 //FileSystems is a slice of FileSystem
@@ -19,16 +19,16 @@ type FileSystems []FileSystem
 
 // Group is a entity (like a project) that gather services instances as containers
 type Group struct {
-	ID           bson.ObjectId `bson:"_id,omitempty"`
-	Created      time.Time     `bson:"created"`
-	Title        string        `bson:"title"`
-	Description  string        `bson:"description"`
-	PortMinRange int           `bson:"portminrange"`
-	PortMaxRange int           `bson:"portmaxrange"`
-	Daemon       bson.ObjectId `bson:"daemon"`
-	FileSystems  FileSystems   `bson:"filesystems"`
-	Containers   Containers    `bson:"containers"`
-	User         bson.ObjectId `bson:"variables"`
+	ID           bson.ObjectId `bson:"_id,omitempty" json:"id,omitempty"`
+	Created      time.Time     `bson:"created" json:"created"`
+	Title        string        `bson:"title" json:"title"`
+	Description  string        `bson:"description" json:"description"`
+	PortMinRange int           `bson:"portminrange" json:"portminrange"`
+	PortMaxRange int           `bson:"portmaxrange" json:"portmaxrange"`
+	Daemon       bson.ObjectId `bson:"daemon" json:"daemon"`
+	FileSystems  FileSystems   `bson:"filesystems" json:"filesystems"`
+	Containers   Containers    `bson:"containers" json:"containers"`
+	User         bson.ObjectId `bson:"variables" json:"variables"`
 }
 
 // AddFileSystem adds a FileSystem to the Group
@@ -49,6 +49,6 @@ type ContainerWithGroup struct {
 
 // ContainerWithGroupID is an entity which contains a container, linked to a group ID
 type ContainerWithGroupID struct {
-	Container Container     `bson:"container"`
-	ID        bson.ObjectId `bson:"_id,omitempty"`
+	Container Container     `bson:"container" json:"container"`
+	ID        bson.ObjectId `bson:"_id,omitempty" json:"id,omitempty"`
 }

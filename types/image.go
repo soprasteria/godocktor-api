@@ -8,13 +8,13 @@ import (
 
 // Image defines a docker image
 type Image struct {
-	ID         bson.ObjectId `bson:"_id,omitempty"`
-	Name       string        `bson:"name"`
-	Created    time.Time     `bson:"created"`
-	Variables  Variables     `bson:"variables"`
-	Ports      Ports         `bson:"ports"`
-	Volumes    Volumes       `bson:"volumes"`
-	Parameters Parameters    `bson:"parameters"`
+	ID         bson.ObjectId `bson:"_id,omitempty" json:"id,omitempty"`
+	Name       string        `bson:"name" json:"name"`
+	Created    time.Time     `bson:"created" json:"created"`
+	Variables  Variables     `bson:"variables" json:"variables"`
+	Ports      Ports         `bson:"ports" json:"ports"`
+	Volumes    Volumes       `bson:"volumes" json:"volumes"`
+	Parameters Parameters    `bson:"parameters" json:"parameters"`
 	Active     bool
 }
 

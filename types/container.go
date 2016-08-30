@@ -4,10 +4,10 @@ import "gopkg.in/mgo.v2/bson"
 
 // PortContainer defines a binding between an external and an internal port
 type PortContainer struct {
-	ID       bson.ObjectId `bson:"_id,omitempty"`
-	Internal int           `bson:"internal"`
-	External int           `bson:"external"`
-	Protocol string        `bson:"protocol"`
+	ID       bson.ObjectId `bson:"_id,omitempty" json:"id,omitempty"`
+	Internal int           `bson:"internal" json:"internal"`
+	External int           `bson:"external" json:"external"`
+	Protocol string        `bson:"protocol" json:"protocol"`
 }
 
 // PortsContainer is a slice of PortContainer
@@ -34,9 +34,9 @@ func (ports PortsContainer) AsPorts() Ports {
 
 // ParameterContainer is an env variables given to the creation of the container
 type ParameterContainer struct {
-	ID    bson.ObjectId `bson:"_id,omitempty"`
-	Name  string        `bson:"name"`
-	Value string        `bson:"value"`
+	ID    bson.ObjectId `bson:"_id,omitempty" json:"id,omitempty"`
+	Name  string        `bson:"name" json:"name"`
+	Value string        `bson:"value" json:"value"`
 }
 
 // ParametersContainer is a slice of ParameterContainer
@@ -65,9 +65,9 @@ func (pc ParameterContainer) String() string {
 
 // VariableContainer is a variable for the container
 type VariableContainer struct {
-	ID    bson.ObjectId `bson:"_id,omitempty"`
-	Name  string        `bson:"name"`
-	Value string        `bson:"value"`
+	ID    bson.ObjectId `bson:"_id,omitempty" json:"id,omitempty"`
+	Name  string        `bson:"name" json:"name"`
+	Value string        `bson:"value" json:"value"`
 }
 
 // Format prints a parameter container as a string like : key=value
@@ -96,10 +96,10 @@ func (variables VariablesContainer) AsVariables() Variables {
 
 // VolumeContainer is a volume mapped to the container
 type VolumeContainer struct {
-	ID       bson.ObjectId `bson:"_id,omitempty"`
-	Internal string        `bson:"internal"`
-	External string        `bson:"external"`
-	Rights   string        `bson:"rights"`
+	ID       bson.ObjectId `bson:"_id,omitempty" json:"id,omitempty"`
+	Internal string        `bson:"internal" json:"internal"`
+	External string        `bson:"external" json:"external"`
+	Rights   Rights        `bson:"rights" json:"rights"`
 }
 
 // VolumesContainer is a slice of VolumeContainer
@@ -115,7 +115,7 @@ func (vc VolumeContainer) Format() string {
 	if vc.Rights == "" {
 		rights = "rw"
 	} else {
-		rights = vc.Rights
+		rights = string(vc.Rights)
 	}
 	return vc.External + ":" + vc.Internal + ":" + rights
 }
@@ -131,31 +131,34 @@ func (volumes VolumesContainer) AsVolumes() Volumes {
 
 // JobContainer is a job lunched for the container
 type JobContainer struct {
-	ID            bson.ObjectId `bson:"_id,omitempty"`
-	Name          string        `bson:"name"`
-	JobID         string        `bson:"jobId"`
-	Description   string        `bson:"description"`
-	Result        string        `bson:"result"`
-	Status        string        `bson:"status"`
-	LastExecution string        `bson:"lastExecution"`
+	ID            bson.ObjectId `bson:"_id,omitempty" json:"id,omitempty"`
+	Name          string        `bson:"name" json:"name"`
+	JobID         string        `bson:"jobId" json:"jobId"`
+	Description   string        `bson:"description" json:"description"`
+	Result        string        `bson:"result" json:"result"`
+	Status        string        `bson:"status" json:"status"`
+	LastExecution string        `bson:"lastExecution" json:"lastExecution"`
 }
+
+// JobsContainer is a slice of jobs
+type JobsContainer []JobContainer
 
 // Container is a container associated to the group
 type Container struct {
-	ID           bson.ObjectId       `bson:"_id,omitempty"`
-	Name         string              `bson:"name"`
-	Hostname     string              `bson:"hostname"`
-	Image        string              `bson:"image"`
-	ServiceTitle string              `bson:"serviceTitle"`
-	ServiceID    string              `bson:"serviceId"`
-	ContainerID  string              `bson:"containerId"`
-	Parameters   ParametersContainer `bson:"parameters"`
-	Ports        PortsContainer      `bson:"ports"`
-	Variables    VariablesContainer  `bson:"variables"`
-	Volumes      VolumesContainer    `bson:"volumes"`
-	Jobs         []JobContainer      `bson:"jobs"`
-	DaemonID     string              `bson:"daemonId,omitempty"`
-	Active       bool                `bson:"active"`
+	ID           bson.ObjectId       `bson:"_id,omitempty" json:"id,omitempty"`
+	Name         string              `bson:"name" json:"name"`
+	Hostname     string              `bson:"hostname" json:"hostname"`
+	Image        string              `bson:"image" json:"image"`
+	ServiceTitle string              `bson:"serviceTitle" json:"serviceTitle"`
+	ServiceID    string              `bson:"serviceId" json:"serviceId"`
+	ContainerID  string              `bson:"containerId" json:"containerId"`
+	Parameters   ParametersContainer `bson:"parameters" json:"parameters"`
+	Ports        PortsContainer      `bson:"ports" json:"ports"`
+	Variables    VariablesContainer  `bson:"variables" json:"variables"`
+	Volumes      VolumesContainer    `bson:"volumes" json:"volumes"`
+	Jobs         JobsContainer       `bson:"jobs" json:"jobs"`
+	DaemonID     string              `bson:"daemonId,omitempty" json:"daemonId,omitempty"`
+	Active       bool                `bson:"active" json:"active"`
 }
 
 // Containers is a slice of Container

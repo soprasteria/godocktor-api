@@ -8,10 +8,10 @@ import (
 
 // URL for service
 type URL struct {
-	ID      bson.ObjectId `bson:"_id,omitempty"`
-	Label   string        `bson:"label"`
-	URL     string        `bson:"url"`
-	Created time.Time     `bson:"created"`
+	ID      bson.ObjectId `bson:"_id,omitempty" json:"id,omitempty"`
+	Label   string        `bson:"label" json:"label"`
+	URL     string        `bson:"url" json:"url"`
+	Created time.Time     `bson:"created" json:"created"`
 }
 
 // URLs is a slice of URL

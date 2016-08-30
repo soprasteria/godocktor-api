@@ -2,13 +2,23 @@ package types
 
 import "gopkg.in/mgo.v2/bson"
 
+// Rights defines the volume rights
+type Rights string
+
+const (
+	// ReadOnlyRights are rights when volume is in read only mode
+	ReadOnlyRights Rights = "ro"
+	// ReadWriteRights are rights when volume is in read write mode
+	ReadWriteRights Rights = "rw"
+)
+
 // Volume is a binding between a folder from inside the container to the host machine
 type Volume struct {
-	ID          bson.ObjectId `bson:"_id,omitempty"`
-	Internal    string        `bson:"internal"`         // volume inside the container
-	Value       string        `bson:"value"`            // volume outside the contaienr
-	Rights      string        `bson:"rights,omitempty"` // ro or rw
-	Description string        `bson:"description"`
+	ID          bson.ObjectId `bson:"_id,omitempty" json:"id,omitempty"`
+	Internal    string        `bson:"internal" json:"internal"`                 // volume inside the container
+	Value       string        `bson:"value" json:"value"`                       // volume outside the contaienr
+	Rights      Rights        `bson:"rights,omitempty" json:"rights,omitempty"` // ro or rw
+	Description string        `bson:"description" json:"description"`
 }
 
 // Volumes is a slice of volumes
@@ -36,12 +46,12 @@ func (a Volumes) Equals(b Volumes) bool {
 
 	var aMap = map[string]Volume{}
 	for _, v := range a {
-		key := v.Internal + ":" + v.Rights
+		key := v.Internal + ":" + string(v.Rights)
 		aMap[key] = v
 	}
 
 	for _, v := range b {
-		key := v.Internal + ":" + v.Rights
+		key := v.Internal + ":" + string(v.Rights)
 		_, ok := aMap[key]
 		if !ok {
 			return false
@@ -68,12 +78,12 @@ func (a Volumes) IsIncluded(b Volumes) bool {
 
 	var bMap = map[string]Volume{}
 	for _, v := range b {
-		key := v.Internal + ":" + v.Rights
+		key := v.Internal + ":" + string(v.Rights)
 		bMap[key] = v
 	}
 
 	for _, v := range a {
-		key := v.Internal + ":" + v.Rights
+		key := v.Internal + ":" + string(v.Rights)
 		_, ok := bMap[key]
 		if !ok {
 			return false

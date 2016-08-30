@@ -8,25 +8,25 @@ import (
 
 // Daemon defines a server where services can be deployed
 type Daemon struct {
-	ID          bson.ObjectId `bson:"_id,omitempty"`
-	Created     time.Time     `bson:"created"`
-	Name        string        `bson:"name"`
-	Protocol    string        `bson:"protocol"`
-	Host        string        `bson:"host"`
-	Port        int           `bson:"port"`
-	Timeout     int           `bson:"timedout"`
-	Ca          string        `bson:"ca,omitempty"`
-	Cert        string        `bson:"cert,omitempty"`
-	Key         string        `bson:"key,omitempty"`
-	Volume      string        `bson:"volume,omitempty"`
-	Description string        `bson:"description,omitempty"`
-	CAdvisorAPI string        `bson:"cadvisorApi,omitempty"`
-	User        bson.ObjectId `bson:"user"`
-	Site        bson.ObjectId `bson:"site"`
-	Variables   Variables     `bson:"variables"`
-	Ports       Ports         `bson:"ports"`
-	Volumes     Volumes       `bson:"volumes"`
-	Parameters  Parameters    `bson:"parameters"`
+	ID          bson.ObjectId `bson:"_id,omitempty" json:"id,omitempty"`
+	Created     time.Time     `bson:"created" json:"created"`
+	Name        string        `bson:"name" json:"name"`
+	Protocol    string        `bson:"protocol" json:"protocol"`
+	Host        string        `bson:"host" json:"host"`
+	Port        int           `bson:"port" json:"port"`
+	Timeout     int           `bson:"timedout" json:"timedout"`
+	Ca          string        `bson:"ca,omitempty" json:"ca,omitempty"`
+	Cert        string        `bson:"cert,omitempty" json:"cert,omitempty"`
+	Key         string        `bson:"key,omitempty" json:"key,omitempty"`
+	Volume      string        `bson:"volume,omitempty" json:"volume,omitempty"`
+	Description string        `bson:"description,omitempty" json:"description,omitempty"`
+	CAdvisorAPI string        `bson:"cadvisorApi,omitempty" json:"cadvisorApi,omitempty"`
+	User        bson.ObjectId `bson:"user" json:"user"`
+	Site        bson.ObjectId `bson:"site" json:"site"`
+	Variables   Variables     `bson:"variables" json:"variables"`
+	Ports       Ports         `bson:"ports" json:"ports"`
+	Volumes     Volumes       `bson:"volumes" json:"volumes"`
+	Parameters  Parameters    `bson:"parameters" json:"parameters"`
 }
 
 // AddVariable adds a Variable to the Daemon

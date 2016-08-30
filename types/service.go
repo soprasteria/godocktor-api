@@ -3,21 +3,22 @@ package types
 import (
 	"errors"
 	"fmt"
-	"gopkg.in/mgo.v2/bson"
 	"strings"
 	"time"
+
+	"gopkg.in/mgo.v2/bson"
 )
 
 // Service defines a CDK service
 type Service struct {
-	ID       bson.ObjectId `bson:"_id,omitempty"`
-	Created  time.Time     `bson:"created"`
-	Title    string        `bson:"title"`
-	Images   Images        `bson:"images"`
-	Commands Commands      `bson:"commands"`
-	URLs     URLs          `bson:"urls"`
-	Jobs     Jobs          `bson:"jobs"`
-	User     bson.ObjectId `bson:"user"`
+	ID       bson.ObjectId `bson:"_id,omitempty" json:"id,omitempty"`
+	Created  time.Time     `bson:"created" json:"created"`
+	Title    string        `bson:"title" json:"title"`
+	Images   Images        `bson:"images" json:"images"`
+	Commands Commands      `bson:"commands" json:"commands"`
+	URLs     URLs          `bson:"urls" json:"urls"`
+	Jobs     Jobs          `bson:"jobs" json:"jobs"`
+	User     bson.ObjectId `bson:"user" json:"user"`
 }
 
 // AddImage adds an Image to the Service

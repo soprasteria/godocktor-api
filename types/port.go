@@ -8,10 +8,10 @@ import (
 
 // Port is a binding between a internal port and an external port
 type Port struct {
-	ID          bson.ObjectId `bson:"_id,omitempty"`
-	Internal    int           `bson:"internal"`
-	Protocol    string        `bson:"protocol"` // tcp/udp
-	Description string        `bson:"description"`
+	ID          bson.ObjectId `bson:"_id,omitempty" json:"id,omitempty"`
+	Internal    int           `bson:"internal" json:"internal"`
+	Protocol    string        `bson:"protocol" json:"protocol"` // tcp/udp
+	Description string        `bson:"description" json:"description"`
 }
 
 // Ports is a slice of ports

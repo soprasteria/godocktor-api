@@ -4,10 +4,10 @@ import "gopkg.in/mgo.v2/bson"
 
 // Parameter for images ex: CpuShare, etc.
 type Parameter struct {
-	ID          bson.ObjectId `bson:"_id,omitempty"`
-	Name        string        `bson:"name"`
-	Value       string        `bson:"value"`
-	Description string        `bson:"description"`
+	ID          bson.ObjectId `bson:"_id,omitempty" json:"id,omitempty"`
+	Name        string        `bson:"name" json:"name"`
+	Value       string        `bson:"value" json:"value"`
+	Description string        `bson:"description" json:"description"`
 }
 
 // Parameters is a slice of parameters
