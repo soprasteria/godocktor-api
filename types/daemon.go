@@ -14,7 +14,7 @@ type Daemon struct {
 	Protocol    string        `bson:"protocol" json:"protocol"`
 	Host        string        `bson:"host" json:"host"`
 	Port        int           `bson:"port" json:"port"`
-	Timeout     int           `bson:"timedout" json:"timedout"`
+	Timeout     int           `bson:"timeout" json:"timeout"`
 	Ca          string        `bson:"ca,omitempty" json:"ca,omitempty"`
 	Cert        string        `bson:"cert,omitempty" json:"cert,omitempty"`
 	Key         string        `bson:"key,omitempty" json:"key,omitempty"`
