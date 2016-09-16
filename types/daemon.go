@@ -21,7 +21,6 @@ type Daemon struct {
 	Volume      string        `bson:"volume,omitempty" json:"volume,omitempty"`
 	Description string        `bson:"description,omitempty" json:"description,omitempty"`
 	CAdvisorAPI string        `bson:"cadvisorApi,omitempty" json:"cadvisorApi,omitempty"`
-	User        bson.ObjectId `bson:"user" json:"user"`
 	Site        bson.ObjectId `bson:"site" json:"site"`
 	Variables   Variables     `bson:"variables" json:"variables"`
 	Ports       Ports         `bson:"ports" json:"ports"`
