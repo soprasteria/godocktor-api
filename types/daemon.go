@@ -26,7 +26,7 @@ type Daemon struct {
 	Ports       Ports         `bson:"ports" json:"ports"`
 	Volumes     Volumes       `bson:"volumes" json:"volumes"`
 	Parameters  Parameters    `bson:"parameters" json:"parameters"`
-	Tags        Tags          `bson:"tags,omitempty" json:"tags,omitempty"`
+	Tags        Tags          `bson:"tags" json:"tags"`
 }
 
 // AddVariable adds a Variable to the Daemon
