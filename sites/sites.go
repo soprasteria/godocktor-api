@@ -2,7 +2,7 @@ package sites
 
 import (
 	"github.com/soprasteria/godocktor-api/types"
-	"gopkg.in/mgo.v2"
+	mgo "gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
 
@@ -17,23 +17,8 @@ func (r *Repo) Save(site types.Site) (types.Site, error) {
 		site.ID = bson.NewObjectId()
 	}
 
-	nb, err := r.Coll.FindId(site.ID).Count()
-	if err != nil {
-		return site, err
-	}
-
-	if nb != 0 {
-		err := r.Coll.UpdateId(site.ID, site)
-		if err != nil {
-			return site, err
-		}
-	} else {
-		err := r.Coll.Insert(site)
-		if err != nil {
-			return site, err
-		}
-	}
-	return site, nil
+	_, err := r.Coll.UpsertId(site.ID, bson.M{"$set": site})
+	return site, err
 }
 
 // Delete a site in database

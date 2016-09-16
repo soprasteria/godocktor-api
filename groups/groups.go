@@ -2,7 +2,7 @@ package groups
 
 import (
 	"github.com/soprasteria/godocktor-api/types"
-	"gopkg.in/mgo.v2"
+	mgo "gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
 
@@ -22,23 +22,8 @@ func (r *Repo) Save(group types.Group) (types.Group, error) {
 		group.ID = bson.NewObjectId()
 	}
 
-	nb, err := r.Coll.FindId(group.ID).Count()
-	if err != nil {
-		return group, err
-	}
-
-	if nb != 0 {
-		err := r.Coll.UpdateId(group.ID, group)
-		if err != nil {
-			return group, err
-		}
-	} else {
-		err := r.Coll.Insert(group)
-		if err != nil {
-			return group, err
-		}
-	}
-	return group, nil
+	_, err := r.Coll.UpsertId(group.ID, bson.M{"$set": group})
+	return group, err
 }
 
 // Delete a group in database

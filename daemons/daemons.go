@@ -2,7 +2,7 @@ package daemons
 
 import (
 	"github.com/soprasteria/godocktor-api/types"
-	"gopkg.in/mgo.v2"
+	mgo "gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
 
@@ -11,29 +11,14 @@ type Repo struct {
 	Coll *mgo.Collection
 }
 
-// Save a daemon into database
+// Save a daemon into a database
 func (r *Repo) Save(daemon types.Daemon) (types.Daemon, error) {
 	if daemon.ID.Hex() == "" {
 		daemon.ID = bson.NewObjectId()
 	}
 
-	nb, err := r.Coll.FindId(daemon.ID).Count()
-	if err != nil {
-		return daemon, err
-	}
-
-	if nb != 0 {
-		err := r.Coll.UpdateId(daemon.ID, daemon)
-		if err != nil {
-			return daemon, err
-		}
-	} else {
-		err := r.Coll.Insert(daemon)
-		if err != nil {
-			return daemon, err
-		}
-	}
-	return daemon, nil
+	_, err := r.Coll.UpsertId(daemon.ID, bson.M{"$set": daemon})
+	return daemon, err
 }
 
 // Delete a daemon in database

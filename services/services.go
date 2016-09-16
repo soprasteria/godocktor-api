@@ -2,8 +2,9 @@ package services
 
 import (
 	"fmt"
+
 	"github.com/soprasteria/godocktor-api/types"
-	"gopkg.in/mgo.v2"
+	mgo "gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
 
@@ -12,29 +13,14 @@ type Repo struct {
 	Coll *mgo.Collection
 }
 
-// Save a group into a database
+// Save a service into a database
 func (r *Repo) Save(service types.Service) (types.Service, error) {
 	if service.ID.Hex() == "" {
 		service.ID = bson.NewObjectId()
 	}
 
-	nb, err := r.Coll.FindId(service.ID).Count()
-	if err != nil {
-		return service, err
-	}
-
-	if nb != 0 {
-		err := r.Coll.UpdateId(service.ID, service)
-		if err != nil {
-			return service, err
-		}
-	} else {
-		err := r.Coll.Insert(service)
-		if err != nil {
-			return service, err
-		}
-	}
-	return service, nil
+	_, err := r.Coll.UpsertId(service.ID, bson.M{"$set": service})
+	return service, err
 }
 
 // Delete a group in database
