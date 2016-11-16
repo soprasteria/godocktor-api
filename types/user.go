@@ -10,8 +10,10 @@ import (
 type Role string
 
 const (
-	// AdminRole is administrator role (can do anything)
+	// AdminRole is an administrator role who can do anything
 	AdminRole Role = "admin"
+	// SupervisorRole is a role who can see anything as read-only but can not do more than a classical user
+	SupervisorRole Role = "supervisor"
 	// UserRole Classical user role
 	UserRole Role = "user"
 )
