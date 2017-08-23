@@ -341,3 +341,15 @@ func TestIsCompatibleWithContainer_compatibleEvenWithDifferentPorts(t *testing.T
 
 	assert.True(t, i.IsCompatibleWithContainer(c), "Image and container should be compatible even when there are different ports")
 }
+
+func TestIsCompatibleWithContainer_compatibleEvenWithNoDataAtAll(t *testing.T) {
+	i := Image{
+		ID:   bson.ObjectId("1"),
+		Name: "image1",
+	}
+	c := Container{
+		Name: "container",
+	}
+
+	assert.True(t, i.IsCompatibleWithContainer(c), "Image and container does not contain any so should be compatible")
+}

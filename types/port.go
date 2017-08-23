@@ -29,8 +29,8 @@ func (a Ports) Equals(b Ports) bool {
 		return true
 	}
 
-	if a == nil || b == nil {
-		return false
+	if len(a) == 0 && len(b) == 0 {
+		return true
 	}
 
 	if len(a) != len(b) {
@@ -61,8 +61,8 @@ func (a Ports) IsIncluded(b Ports) bool {
 		return true
 	}
 
-	if a == nil || b == nil {
-		return false
+	if len(a) == 0 && len(b) == 0 {
+		return true
 	}
 
 	if len(a) > len(b) {

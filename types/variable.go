@@ -25,8 +25,8 @@ func (a Variables) Equals(b Variables) bool {
 		return true
 	}
 
-	if a == nil || b == nil {
-		return false
+	if len(a) == 0 && len(b) == 0 {
+		return true
 	}
 
 	if len(a) != len(b) {
@@ -55,8 +55,8 @@ func (a Variables) IsIncluded(b Variables) bool {
 		return true
 	}
 
-	if a == nil || b == nil {
-		return false
+	if len(a) == 0 && len(b) == 0 {
+		return true
 	}
 
 	if len(a) > len(b) {
