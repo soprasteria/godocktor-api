@@ -64,10 +64,30 @@ func (i Image) IsIncludedInConf(b Image) bool {
 }
 
 // IsCompatibleWithContainer checks that an image is compatible with a Container instance
-// It does not check the name for example, but will check ports, variables, parameters and volumes
-func (i Image) IsCompatibleWithContainer(b Container) bool {
-	return i.Parameters.IsIncluded(b.Parameters.AsParameters()) &&
-		i.Ports.IsIncluded(b.Ports.AsPorts()) &&
-		i.Variables.IsIncluded(b.Variables.AsVariables()) &&
-		i.Volumes.IsIncluded(b.Volumes.AsVolumes())
+// An image is incompatible with a container if
+// - Image adds new variables (We can't fill automatically the value for the new var)
+// - Image adds new parameters
+// - Volumes are removed (existing container volume, not in image)
+// It does not check the name for example, variables, parameters and volumes
+// Ports are not checked because we are able to map a new one easily.
+func (i Image) IsCompatibleWithContainer(c Container) bool {
+
+	var compatiblesParameters = i.Parameters.IsIncluded(c.Parameters.AsParameters())
+	var compatiblesVariables = i.Variables.IsIncluded(c.Variables.AsVariables())
+	var compatiblesVolumes = func() bool {
+		containerVolumes := c.Volumes.AsVolumes()
+
+		m := make(map[string]Volume)
+		for _, v := range i.Volumes {
+			m[v.Internal] = v
+		}
+		for _, containerVolume := range containerVolumes {
+			if _, ok := m[containerVolume.Internal]; !ok {
+				return false
+			}
+		}
+		return true
+	}()
+
+	return compatiblesParameters && compatiblesVariables && compatiblesVolumes
 }
