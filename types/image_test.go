@@ -20,7 +20,7 @@ func ExampleImageIdEquals() {
 	// Output: true
 }
 
-func ExampleImageEquals() {
+func ExampleEqualsInConf() {
 	i := Image{
 		ID:         bson.ObjectId("1"),
 		Name:       "temp",
@@ -240,7 +240,7 @@ func TestIsCompatibleWithContainer_compatibleEvenWithNewVolume(t *testing.T) {
 	assert.True(t, i.IsCompatibleWithContainer(c), "Image and container should be compatible even when volume has been added")
 }
 
-func TestIsCompatibleWithContainer_incompatibleBecauseRemovedVolume(t *testing.T) {
+func TestIsCompatibleWithContainer_compatibleEvenWhenRemovedVolume(t *testing.T) {
 	i := Image{
 		ID:   bson.ObjectId("1"),
 		Name: "image1",
@@ -268,10 +268,10 @@ func TestIsCompatibleWithContainer_incompatibleBecauseRemovedVolume(t *testing.T
 		Parameters: ParametersContainer{},
 	}
 
-	assert.False(t, i.IsCompatibleWithContainer(c), "Image and container should not be compatible because a volume has been removed")
+	assert.True(t, i.IsCompatibleWithContainer(c), "Image and container should be compatible even when a volume has been removed")
 }
 
-func TestIsCompatibleWithContainer_incompatibleBecauseNewAndRemovedVolume(t *testing.T) {
+func TestIsCompatibleWithContainer_compatibleEvenWhenBecauseNewAndRemovedVolume(t *testing.T) {
 	i := Image{
 		ID:   bson.ObjectId("1"),
 		Name: "image1",
@@ -300,7 +300,7 @@ func TestIsCompatibleWithContainer_incompatibleBecauseNewAndRemovedVolume(t *tes
 		Parameters: ParametersContainer{},
 	}
 
-	assert.False(t, i.IsCompatibleWithContainer(c), "Image and container should not be compatible because a volume has been added and another one removed")
+	assert.True(t, i.IsCompatibleWithContainer(c), "Image and container should be compatible even when a volume has been added and another one removed")
 }
 
 func TestIsCompatibleWithContainer_compatibleEvenWithDifferentPorts(t *testing.T) {

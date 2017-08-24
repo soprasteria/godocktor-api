@@ -74,20 +74,6 @@ func (i Image) IsCompatibleWithContainer(c Container) bool {
 
 	var compatiblesParameters = i.Parameters.IsIncluded(c.Parameters.AsParameters())
 	var compatiblesVariables = i.Variables.IsIncluded(c.Variables.AsVariables())
-	var compatiblesVolumes = func() bool {
-		containerVolumes := c.Volumes.AsVolumes()
 
-		m := make(map[string]Volume)
-		for _, v := range i.Volumes {
-			m[v.Internal] = v
-		}
-		for _, containerVolume := range containerVolumes {
-			if _, ok := m[containerVolume.Internal]; !ok {
-				return false
-			}
-		}
-		return true
-	}()
-
-	return compatiblesParameters && compatiblesVariables && compatiblesVolumes
+	return compatiblesParameters && compatiblesVariables
 }
