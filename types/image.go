@@ -54,13 +54,22 @@ func (i Image) EqualsInConf(b Image) bool {
 	return i.Parameters.Equals(b.Parameters) && i.Ports.Equals(b.Ports) && i.Variables.Equals(b.Variables) && i.Volumes.Equals(b.Volumes)
 }
 
-// IsIncludedInConf checks that two images are compatible in configuration
+// IsIncludedInConf checks that the first image configuration is included in the given one.
 // It does not check the name for example, but will check ports, variables, parameters and volumes
 func (i Image) IsIncludedInConf(b Image) bool {
 	if i.ID == b.ID {
 		return true
 	}
 	return i.Parameters.IsIncluded(b.Parameters) && i.Ports.IsIncluded(b.Ports) && i.Variables.IsIncluded(b.Variables) && i.Volumes.IsIncluded(b.Volumes)
+}
+
+//IsCompatible checks that two images are compatible
+// It checks that parameters, variables and volumes are checked. Ports can be easily set automatically, so there are no restrictions
+func (i Image) IsCompatible(b Image) bool {
+	if i.ID == b.ID {
+		return true
+	}
+	return i.Parameters.IsIncluded(b.Parameters) && i.Variables.IsIncluded(b.Variables) && i.Volumes.IsIncluded(b.Volumes)
 }
 
 // IsCompatibleWithContainer checks that an image is compatible with a Container instance
