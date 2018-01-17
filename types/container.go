@@ -5,6 +5,7 @@ import "gopkg.in/mgo.v2/bson"
 // PortContainer defines a binding between an external and an internal port
 type PortContainer struct {
 	ID       bson.ObjectId `bson:"_id,omitempty"`
+	Host     string        `bson:"host"`
 	Internal int           `bson:"internal"`
 	External int           `bson:"external"`
 	Protocol string        `bson:"protocol"`
