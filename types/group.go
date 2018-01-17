@@ -29,6 +29,7 @@ type Group struct {
 	FileSystems  FileSystems   `bson:"filesystems"`
 	Containers   Containers    `bson:"containers"`
 	User         bson.ObjectId `bson:"variables"`
+	IsSSO        bool          `bson:"isSSO"`
 }
 
 // AddFileSystem adds a FileSystem to the Group

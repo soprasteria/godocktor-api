@@ -156,6 +156,7 @@ type Container struct {
 	Jobs         []JobContainer      `bson:"jobs"`
 	DaemonID     string              `bson:"daemonId,omitempty"`
 	Active       bool                `bson:"active"`
+	NetworkName  string              `bson:"networkName"`
 }
 
 // Containers is a slice of Container
