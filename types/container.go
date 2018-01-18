@@ -206,3 +206,8 @@ func (c *Container) AddVolume(v VolumeContainer) {
 func (c *Container) AddJob(j JobContainer) {
 	c.Jobs = append(c.Jobs, j)
 }
+
+// AddLabel adds a Label to the Container
+func (c *Container) AddLabel(l Label) {
+	c.Labels = append(c.Labels, l)
+}
