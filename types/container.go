@@ -11,6 +11,15 @@ type Label struct {
 // Labels is a slice of Label
 type Labels []Label
 
+// AsMap converts labels as a map in Docker format
+func (labels Labels) AsMap() map[string]string {
+	var m = make(map[string]string)
+	for _, l := range labels {
+		m[l.Name] = l.Value
+	}
+	return m
+}
+
 // PortContainer defines a binding between an external and an internal port
 type PortContainer struct {
 	ID       bson.ObjectId `bson:"_id,omitempty"`
