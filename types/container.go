@@ -2,6 +2,15 @@ package types
 
 import "gopkg.in/mgo.v2/bson"
 
+// Label is a Docker label used to set properties on container
+type Label struct {
+	Name  string `bson:"name"`
+	Value string `bson:"value"`
+}
+
+// Labels is a slice of Label
+type Labels []Label
+
 // PortContainer defines a binding between an external and an internal port
 type PortContainer struct {
 	ID       bson.ObjectId `bson:"_id,omitempty"`
@@ -154,6 +163,7 @@ type Container struct {
 	Ports        PortsContainer      `bson:"ports"`
 	Variables    VariablesContainer  `bson:"variables"`
 	Volumes      VolumesContainer    `bson:"volumes"`
+	Labels       Labels              `bson:"labels"`
 	Jobs         []JobContainer      `bson:"jobs"`
 	DaemonID     string              `bson:"daemonId,omitempty"`
 	Active       bool                `bson:"active"`
