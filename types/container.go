@@ -20,6 +20,24 @@ func (labels Labels) AsMap() map[string]string {
 	return m
 }
 
+// ExtraHost is a Docker extraHosts used to add entry in /etc/hosts
+type ExtraHost struct {
+	Host string `bson:"host"`
+	IP   string `bson:"ip"`
+}
+
+// ExtraHosts is a slice of ExtraHost
+type ExtraHosts []ExtraHost
+
+// AsExtraHosts converts extraHosts as an array in Docker format
+func (extraHosts ExtraHosts) AsExtraHosts() []string {
+	var result []string
+	for _, eh := range extraHosts {
+		result = append(result, eh.Host+":"+eh.IP)
+	}
+	return result
+}
+
 // PortContainer defines a binding between an external and an internal port
 type PortContainer struct {
 	ID       bson.ObjectId `bson:"_id,omitempty"`
@@ -177,6 +195,7 @@ type Container struct {
 	DaemonID     string              `bson:"daemonId,omitempty"`
 	Active       bool                `bson:"active"`
 	NetworkName  string              `bson:"networkName"`
+	ExtraHosts   ExtraHosts          `bson:"extraHosts"`
 }
 
 // Containers is a slice of Container
