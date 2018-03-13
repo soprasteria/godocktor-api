@@ -1,4 +1,4 @@
-# Go API for Docktor model [![Build Status](https://travis-ci.org/soprasteria/godocktor-api.svg?branch=master)](https://travis-ci.org/soprasteria/godocktor-api)
+# Go API for Docktor model [![Build Status](https://travis-ci.org/soprasteria/godocktor-api.svg?branch=master)](https://travis-ci.org/soprasteria/godocktor-api) [![Go Report Card](https://goreportcard.com/badge/github.com/soprasteria/godocktor-api)](https://goreportcard.com/report/github.com/soprasteria/godocktor-api)
 
 See Docktor : https://github.com/docktor/docktor
 
