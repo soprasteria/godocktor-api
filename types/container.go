@@ -195,6 +195,7 @@ type Container struct {
 	DaemonID     string              `bson:"daemonId,omitempty"`
 	Active       bool                `bson:"active"`
 	NetworkName  string              `bson:"networkName"`
+	NetworkMode  string              `bson:"networkMode"`
 	ExtraHosts   ExtraHosts          `bson:"extraHosts"`
 }
 
