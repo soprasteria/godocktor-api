@@ -1,6 +1,9 @@
 package groups
 
 import (
+	"fmt"
+	"time"
+
 	"github.com/soprasteria/godocktor-api/types"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
@@ -130,4 +133,30 @@ func (r *Repo) FindAllWithContainers(groupNameRegex string, containersID []strin
 	}
 
 	return results, nil
+}
+
+// SaveWithBackup a group into a database, keeping a backup
+func (r *Repo) SaveWithBackup(group types.Group, description string) (types.Group, error) {
+	backup, err := r.FindByIDBson(group.ID)
+	if err != nil {
+		return group, fmt.Errorf("Error when fetching backup value for group %v (error: %v)", group.Title, err)
+	}
+
+	group.Backup = &types.Backup{
+		Created:     time.Now(),
+		Description: description,
+		Group:       backup,
+	}
+
+	return r.Save(group)
+}
+
+// RestoreFromBackup restore last group backup
+func (r *Repo) RestoreFromBackup(group types.Group) (types.Group, error) {
+	if group.Backup == nil || group.Backup.Group.ID.Hex() == "" {
+		return group, fmt.Errorf("No backup value for group %v", group.Title)
+	}
+
+	group = group.Backup.Group
+	return r.Save(group)
 }

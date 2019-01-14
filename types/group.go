@@ -30,6 +30,13 @@ type Group struct {
 	Containers   Containers    `bson:"containers"`
 	User         bson.ObjectId `bson:"variables"`
 	IsSSO        bool          `bson:"isSSO"`
+	Backup       *Backup       `bson:"backup"`
+}
+
+type Backup struct {
+	Created     time.Time `bson:"created"`
+	Description string    `bson:"title"`
+	Group       Group     `bson:"group"`
 }
 
 // AddFileSystem adds a FileSystem to the Group
