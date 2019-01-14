@@ -14,28 +14,30 @@ import (
 
 // OpenWithAuth the connexion to docktor API with authentication
 func OpenWithAuth(docktorMongoHost, authDatabase, user, password string) (*Docktor, error) {
-	return open(mgo.DialInfo{
+	dialInfo := mgo.DialInfo{
 		Addrs:    []string{docktorMongoHost},
 		Database: authDatabase,
 		Username: user,
 		Password: password,
-	})
-}
-
-// Open the connexion to docktor API
-func Open(docktorMongoHost string) (*Docktor, error) {
-	return open(mgo.DialInfo{
-		Addrs: []string{docktorMongoHost},
-	})
-}
-
-func open(dialInfo mgo.DialInfo) (*Docktor, error) {
-
-	dialInfo.Timeout = time.Second * 60
+		Timeout:  time.Second * 10,
+	}
 	session, err := mgo.DialWithInfo(&dialInfo)
 	if err != nil {
 		return &Docktor{}, err
 	}
+	return open(session)
+}
+
+// Open the connexion to docktor API
+func Open(docktorMongoHost string) (*Docktor, error) {
+	session, err := mgo.Dial(docktorMongoHost)
+	if err != nil {
+		return &Docktor{}, err
+	}
+	return open(session)
+}
+
+func open(session *mgo.Session) (*Docktor, error) {
 	session.SetMode(mgo.Monotonic, true)
 	context := appContext{session.DB("docktor")}
 	services := &services.Repo{Coll: context.db.C("services")}
