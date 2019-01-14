@@ -28,9 +28,9 @@ type Group struct {
 	Daemon       bson.ObjectId `bson:"daemon"`
 	FileSystems  FileSystems   `bson:"filesystems"`
 	Containers   Containers    `bson:"containers"`
-	User         bson.ObjectId `bson:"variables"`
+	User         bson.ObjectId `bson:"user"`
 	IsSSO        bool          `bson:"isSSO"`
-	Backup       *Backup       `bson:"backup"`
+	Backup       *Backup       `bson:"backup,omitempty"`
 }
 
 type Backup struct {
