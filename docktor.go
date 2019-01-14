@@ -1,6 +1,8 @@
 package docktor
 
 import (
+	"time"
+
 	"gopkg.in/mgo.v2"
 
 	"github.com/soprasteria/godocktor-api/daemons"
@@ -10,10 +12,27 @@ import (
 	"github.com/soprasteria/godocktor-api/users"
 )
 
+// OpenWithAuth the connexion to docktor API with authentication
+func OpenWithAuth(docktorMongoHost, authDatabase, user, password string) (*Docktor, error) {
+	return open(mgo.DialInfo{
+		Addrs:    []string{docktorMongoHost},
+		Database: authDatabase,
+		Username: user,
+		Password: password,
+	})
+}
+
 // Open the connexion to docktor API
 func Open(docktorMongoHost string) (*Docktor, error) {
+	return open(mgo.DialInfo{
+		Addrs: []string{docktorMongoHost},
+	})
+}
 
-	session, err := mgo.Dial(docktorMongoHost)
+func open(dialInfo mgo.DialInfo) (*Docktor, error) {
+
+	dialInfo.Timeout = time.Second * 60
+	session, err := mgo.DialWithInfo(&dialInfo)
 	if err != nil {
 		return &Docktor{}, err
 	}
