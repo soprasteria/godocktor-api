@@ -44,4 +44,8 @@ type RepoGroups interface {
 	SaveContainer(types.Group, types.Container) error
 	// DeleteContainerByID deletes the container by its docker container ID. The group in which it is, is required
 	DeleteContainerByID(groupID bson.ObjectId, containerID string) error
+	// SaveWithBackup a group into a database, keeping a backup
+	SaveWithBackup(group types.Group, description string) (types.Group, error)
+	// RestoreFromBackup restore last group backup
+	RestoreFromBackup(group types.Group) (types.Group, error)
 }
