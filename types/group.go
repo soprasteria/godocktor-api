@@ -35,7 +35,7 @@ type Group struct {
 
 type Backup struct {
 	Created     time.Time `bson:"created"`
-	Description string    `bson:"title"`
+	Description string    `bson:"description"`
 	Group       Group     `bson:"group"`
 }
 
