@@ -9,7 +9,7 @@ import (
 // FileSystem is a filesystem watched by the group
 type FileSystem struct {
 	ID          bson.ObjectId `bson:"_id,omitempty"`
-	Daemon      string        `bson:"daemon"`
+	Daemon      bson.ObjectId `bson:"daemon"`
 	Partition   string        `bson:"partition,omitempty"`
 	Description string        `bson:"description"`
 }
